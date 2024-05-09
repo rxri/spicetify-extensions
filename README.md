@@ -60,3 +60,6 @@ You must also enable the "Enable Enhance Playlist UI and functionality" feature 
 #### To use:
 
 * Click the button on the topbar, enter phrase, click submit.
+
+-----
+Most of these extensions are made by [CharlieS1103](https://github.com/CharlieS1103).
