@@ -145,5 +145,5 @@ interface AdManagers {
 	enableExperimentalFeatures();
 	bindToSlots();
 	hideAdLikeElements();
-	productState.subValues({ keys: ["ads", "catalogue", "product", "type"] }, configureAdManagers);
+	productState.subValues({ keys: ["ads", "catalogue", "product", "type"] }, () => configureAdManagers());
 })();
