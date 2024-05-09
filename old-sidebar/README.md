@@ -1,17 +1,16 @@
 # OldSidebar
 
-[Spicetify](https://github.com/khanhas/spicetify-cli) No more libraryx, go back to the old sidebar
-
-* To use, simply install the extension, I may add a toggle for it in the future.
+Go back to the old sidebar with `OldSidebar` for **[spicetify](https://github.com/spicetify/spicetify-cli)**
 
 ## Install
 
-Copy `oldSidebar.js` into your [Spicetify](https://github.com/khanhas/spicetify-cli) extensions directory:
+1. Copy `oldSidebar.js` to extensions folder based on your OS, or install it via **[marketplace](https://github.com/spicetify/spicetify-marketplace)**
+
 | **Platform**   | **Path**                                                                             |
 |----------------|--------------------------------------------------------------------------------------|
-| **Linux**      | `~/.config/spicetify/Extensions` or `$XDG_CONFIG_HOME/.config/spicetify/Extensions/` |
-| **MacOS**      | `~/spicetify_data/Extensions` or `$SPICETIFY_CONFIG/Extensions`                      |
 | **Windows**    | `%appdata%\spicetify\Extensions\`                                                    |
+| **Linux**      | `~/.config/spicetify/Extensions` or `$XDG_CONFIG_HOME/.config/spicetify/Extensions/` |
+| **MacOS**      | `~/.config/spicetify/Extensions` or `~/.spicetify/Extensions`                        |
 
 After putting the extension file into the correct folder, run the following command to install the extension or install through marketplace:
 
@@ -41,12 +40,8 @@ spicetify apply
 
 Toggle in the Profile menu.
 
-![Screenshot](https://raw.githubusercontent.com/CharlieS1103/spicetify-extensions/main/oldSidebar/oldSidebar.png)
+![Screenshot](https://raw.githubusercontent.com/rxri/spicetify-extensions/main/oldSidebar/oldSidebar.png)
 
-## More
-
-🌟 Like it? Gimme some love!
-[![Github Stars badge](https://img.shields.io/github/stars/CharlieS1103/spicetify-extensions?logo=github&style=social)](https://github.com/CharlieS1103/spicetify-extensions/)
-
-If you find any bugs, please [create a new issue](https://github.com/CharlieS1103/spicetify-extensions/issues/new/choose) on the GitHub repo.
-![https://github.com/CharlieS1103/spicetify-extensions/issues](https://img.shields.io/github/issues/CharlieS1103/spicetify-extensions?logo=github)
+-----
+If you find any bugs, please [create a new issue](https://github.com/rxri/spicetify-extensions/issues/new/choose) on the GitHub repo.
+![https://github.com/rxri/spicetify-extensions/issues](https://img.shields.io/github/issues/rxri/spicetify-extensions?logo=github)

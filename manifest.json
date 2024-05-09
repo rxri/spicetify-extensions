@@ -24,13 +24,13 @@
 		"authors": [{ "name": "CharlieS1103", "url": "https://github.com/CharlieS1103" }]
 	},
 	{
-		"name": "Adblock",
-		"description": "Disable ads and other annoying elements in Spotify",
-		"preview": "adblock/adblock.png",
+		"name": "adblockify",
+		"description": "Disable ads and other annoying elements in Spotify. It also spoofs premium, so you can use premium features without paying",
+		"preview": "adblock/assets/preview.png",
 		"main": "adblock/adblock.js",
 		"readme": "adblock/README.md",
 		"authors": [{ "name": "ririxi", "url": "https://github.com/rxri" }],
-		"tags": ["ads, adblock", "block"]
+		"tags": ["ads", "ad", "block", "remove", "disable", "adblock"]
 	},
 	{
 		"name": "Format colors",

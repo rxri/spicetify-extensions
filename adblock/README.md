@@ -1,6 +1,6 @@
 # Adblock
 
-Disable ads and other annoying elements in Spotify via **[spicetify](https://github.com/spicetify/spicetify-cli)**.
+Disable ads and other annoying elements in Spotify for **[spicetify](https://github.com/spicetify/spicetify-cli)**. It also spoofs premium, so you can use premium features without paying
 
 ## Install
 
@@ -36,7 +36,6 @@ Then run:
 spicetify apply
 ```
 
-## More
-
-If you find any bugs, please [create a new issue](https://github.com/CharlieS1103/spicetify-extensions/issues/new/choose) on the GitHub repo.
-<br/>![https://github.com/CharlieS1103/spicetify-extensions/issues](https://img.shields.io/github/issues/rxri/spicetify-extensions?logo=github)
+-----
+If you find any bugs, please [create a new issue](https://github.com/rxri/spicetify-extensions/issues/new/choose) on the GitHub repo.
+![https://github.com/rxri/spicetify-extensions/issues](https://img.shields.io/github/issues/rxri/spicetify-extensions?logo=github)
