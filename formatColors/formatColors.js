@@ -1,20 +1,18 @@
-// @ts-check
+/// <reference path="../@types/spicetify.d.ts" />
 
-// NAME: formatColors
-// AUTHOR: CharlieS1103
-// DESCRIPTION: Copies colors in colors.ini format from the CSS (For developers)
-
-/// <reference path="../../spicetify-cli/globals.d.ts" />
+/**
+ * @author CharlieS1103
+ */
 
 (function formatColors() {
-    const { Platform } = Spicetify;
-    if (!(Platform)) {
-        setTimeout(formatColors, 300)
-        return
-    }
+	const { Platform } = Spicetify;
+	if (!Platform) {
+		setTimeout(formatColors, 300);
+		return;
+	}
 
-    const buttontxt = "Format Colors"
-    const BUTTON_ICON = `
+	const buttontxt = "Format Colors";
+	const BUTTON_ICON = `
   <?xml version="1.0" encoding="iso-8859-1"?>
 <!-- Generator: Adobe Illustrator 19.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
@@ -34,47 +32,38 @@
 	</g>
 </g>
 </svg>
-  `
+  `;
 
- new Spicetify.Topbar.Button(
-        "Format Colors",
-        BUTTON_ICON,
-        convertColorSheet,
-        false
-    );
+	new Spicetify.Topbar.Button("Format Colors", BUTTON_ICON, convertColorSheet, false);
+})();
 
- 
-})()
+function convertColorSheet() {
+	for (const sheet of document.styleSheets) {
+		// TODO: Fix the wall of ignores
+		// @ts-ignore
+		if (sheet.href === "https://xpui.app.spotify.com/colors.css" || sheet.ownerNode.classList[1] === "marketplaceScheme") {
+			let cssText = sheet.rules[0].cssText;
+			cssText = cssText.replaceAll(":root {", "");
+			cssText = cssText.replaceAll("{", "");
+			cssText = cssText.replaceAll(":", "         =");
+			cssText = cssText.replaceAll("--spice-", "");
+			cssText = cssText.replaceAll("#", "");
+			cssText = cssText.replaceAll("}", "");
+			cssText = cssText.replaceAll("!important", "");
+			Spicetify.Platform.ClipboardAPI.copy(cssText);
+			cssText = cssText.replaceAll(";", "\\n");
+			const regex = /\\n|\\r\\n|\\n\\r|\\r/g;
+			const reg = /rgb.*?\\n/gm;
+			cssText = cssText.replace(reg, "");
 
+			const htmlElement = `<span  style="user-select: all;">${cssText.replace(regex, "<br>")}</span>`;
+			Spicetify.PopupModal.display({
+				title: "Formatted Colors",
+				content: htmlElement,
+			});
 
-function convertColorSheet(){
-    for (const sheet of document.styleSheets) {
-        // TODO: Fix the wall of ignores
-        // @ts-ignore
-        if (sheet.href == "https://xpui.app.spotify.com/colors.css" || sheet.ownerNode.classList[1] == "marketplaceScheme") {
-            let cssText = sheet.rules[0].cssText
-            cssText = cssText.replaceAll(":root {", "");
-            cssText = cssText.replaceAll("{", "");
-            cssText = cssText.replaceAll(":", "         =")
-            cssText = cssText.replaceAll("--spice-", "")
-            cssText = cssText.replaceAll("#", "")
-            cssText = cssText.replaceAll("}", "")
-            cssText = cssText.replaceAll("!important", "")
-            Spicetify.Platform.ClipboardAPI.copy(cssText)
-            cssText = cssText.replaceAll(";", `\\n`)
-            const regex = /\\n|\\r\\n|\\n\\r|\\r/g;
-            const reg = /rgb.*?\\n/gm;
-            cssText = cssText.replace(reg, '') 
-    
-            const htmlElement = `<span  style="user-select: all;">${cssText.replace(regex, '<br>')}</span>`
-            Spicetify.PopupModal.display({
-                title: "Formatted Colors",
-                content: htmlElement,
-            });
-            
-            Spicetify.showNotification("Copied to clipboard")
-            break;
-        }
-    }
-
+			Spicetify.showNotification("Copied to clipboard");
+			break;
+		}
+	}
 }
