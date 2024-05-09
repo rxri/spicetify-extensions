@@ -33,9 +33,6 @@ interface AdManagers {
 	inStreamApi: {
 		disable(): Promise<void>;
 	};
-	hpto: {
-		disable(): Promise<void>;
-	};
 	sponsoredPlaylist: {
 		disable(): Promise<void>;
 	};
