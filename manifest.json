@@ -1,0 +1,54 @@
+[
+	{
+		"name": "Feature Shuffle",
+		"description": "Spicetify extension to make a playlist based on another playlist's audio features",
+		"preview": "featureshuffle/featureshuffle.png",
+		"main": "featureshuffle/featureshuffle.js",
+		"readme": "featureshuffle/README.md"
+	},
+	{
+		"name": "Song Stats",
+		"description": "Spicetify extension to display a song's audio features",
+		"preview": "songstats/songstats.png",
+		"main": "songstats/songstats.js",
+		"readme": "songstats/README.md"
+	},
+	{
+		"name": "WikiFy",
+		"description": "Shows an Artists wikipedia page to learn more about them",
+		"preview": "wikify/wikify.png",
+		"main": "wikify/wikify.js",
+		"readme": "wikify/README.md"
+	},
+	{
+		"name": "Adblock",
+		"description": "Disable ads and other annoying elements in Spotify",
+		"preview": "adblock/adblock.png",
+		"main": "adblock/adblock.js",
+		"readme": "adblock/README.md",
+		"authors": [{ "name": "ririxi", "url": "https://github.com/rxri" }],
+		"tags": ["ads, adblock", "block"]
+	},
+	{
+		"name": "Format colors",
+		"description": "Convert the current colors defined in root to color.ini format, for theme developers",
+		"preview": "formatColors/formatColors.png",
+		"main": "formatColors/formatColors.js",
+		"readme": "formatColors/README.md"
+	},
+	{
+		"name": "Phrase to Playlist",
+		"description": "Convert a phrase into a playlist with songs arraged to make that phrase",
+		"preview": "phraseToPlaylist/phraseToPlaylist.png",
+		"main": "phraseToPlaylist/phraseToPlaylist.js",
+		"readme": "phraseToPlaylist/README.md",
+		"authors": [{ "name": "CharlieS1103", "url": "https://github.com/CharlieS1103" }, { "name": "MalTeeez", "url": "https://github.com/MalTeeez" }]
+	},
+	{
+		"name": "Writeify",
+		"description": "Take notes on songs, albums, and artists",
+		"preview": "writeify/writeify.png",
+		"main": "writeify/writeify.js",
+		"readme": "writeify/README.md"
+	}
+]

@@ -1,0 +1,14 @@
+{
+	"compilerOptions": {
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+		"skipLibCheck": true,
+		"target": "ES2021",
+		"verbatimModuleSyntax": true,
+		"allowJs": true,
+		"strict": true,
+		"noUncheckedIndexedAccess": true,
+		"lib": ["ES2021", "DOM"]
+	},
+	"include": ["adblock/adblock.ts"]
+}
