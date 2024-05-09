@@ -37,6 +37,7 @@ const getSettingsClient = (cache) => {
         setTimeout(adblockify, 100);
         return;
     }
+    const slots = await CosmosAsync.get("sp://ads/v1/slots");
     const hideAdLikeElements = () => {
         const css = document.createElement("style");
         const upgradeText = Locale.get("upgrade.tooltip.title");
@@ -75,7 +76,6 @@ const getSettingsClient = (cache) => {
         }
     };
     const bindToSlots = async () => {
-        const slots = await CosmosAsync.get("sp://ads/v1/slots");
         for (const slot of slots) {
             subToSlot(slot.slot_id);
             handleAdSlot({ adSlotEvent: { slotId: slot.slot_id } });
@@ -85,13 +85,31 @@ const getSettingsClient = (cache) => {
         const slotId = data?.adSlotEvent?.slotId;
         try {
             audio.inStreamApi.adsCoreConnector.clearSlot(slotId);
-            getSettingsClient(webpackCache)?.updateStreamTimeInterval({ slotId, timeInterval: 0 });
+            updateSlotSettings(slotId);
         }
         catch (error) {
             console.error("adblockify: Failed inside `handleAdSlot` function. Retrying in 100ms...", error);
             setTimeout(handleAdSlot, 100, data);
         }
         configureAdManagers();
+    };
+    const updateSlotSettings = async (slotId) => {
+        try {
+            const settingsClient = getSettingsClient(webpackCache);
+            if (!settingsClient)
+                return;
+            await settingsClient.updateStreamTimeInterval({ slotId, timeInterval: "0" });
+            await settingsClient.updateSlotEnabled({ slotId, enabled: false });
+            await settingsClient.updateDisplayTimeInterval({ slotId, timeInterval: "0" });
+        }
+        catch (error) {
+            console.error("adblockify: Failed inside `updateSlotSettings` function.", error);
+        }
+    };
+    const intervalUpdateSlotSettings = async () => {
+        for (const slot of slots) {
+            updateSlotSettings(slot.slot_id);
+        }
     };
     const subToSlot = (slot) => {
         try {
@@ -116,4 +134,6 @@ const getSettingsClient = (cache) => {
     bindToSlots();
     hideAdLikeElements();
     productState.subValues({ keys: ["ads", "catalogue", "product", "type"] }, () => configureAdManagers());
+    // Update slot settings after 5 seconds... idk why, don't ask me why, it just works
+    setTimeout(intervalUpdateSlotSettings, 5 * 1000);
 })();
