@@ -4,7 +4,7 @@ Add some spice with extensions to make spotify more enjoyable
 
 ## [Song-Stats](./songstats/README.md)
 
-*Displays the audio features of a song*
+*Display the audio features of a song*
 
 #### To use:
 
@@ -12,7 +12,7 @@ Add some spice with extensions to make spotify more enjoyable
 
 ## [Feature Shuffle](./featureshuffle/README.md)
 
-*Creates a randomized playlist based on the average audio features of the clicked playlist*
+*Create a randomized playlist based on the average audio features of the clicked playlist*
 
 #### To use:
 
@@ -26,9 +26,9 @@ Add some spice with extensions to make spotify more enjoyable
 
 * Right click a playlist and click *View Wiki*
 
-## [FixEnhance:](./old-sidebar/README.md)
+## [FixEnhance](./old-sidebar/README.md)
 
-*Patches spotify enhance playlist feature (Spotify patched it themselves, however if you prefer an old version this should fix it for you)*
+*Patch spotify enhance playlist feature (Spotify patched it themselves, however if you prefer an old version this should fix it for you)*
 
 #### To use:
 
@@ -37,9 +37,9 @@ Add some spice with extensions to make spotify more enjoyable
 ``spicetify apply``.
 You must also enable the "Enable Enhance Playlist UI and functionality" feature in the experimental features menu.
 
-## [AdBlock](./adblock/README.md)
+## [Adblock](./adblock/README.md)
 
-*Blocks ads on Spotify, UI and Audio.*
+*Disable ads and other annoying elements in Spotify*
 
 #### To use:
 
@@ -47,7 +47,7 @@ You must also enable the "Enable Enhance Playlist UI and functionality" feature 
 
 ## [FormatColors](./formatColors/README.md)
 
-*Convert the current colors defined in root to color.ini format, made for Theme Developers.*
+*Convert the current colors defined in root to color.ini format, made for Theme Developers*
 
 #### To use:
 
