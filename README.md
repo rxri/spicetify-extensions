@@ -2,6 +2,21 @@
 
 Add some spice with extensions to make spotify more enjoyable
 
+## [Adblock](./adblock/README.md)
+
+*Disable ads and other annoying elements in Spotify. You can also enjoy few premium features without paying for it*
+
+> [!NOTE]
+> Premium features include:
+> - No forced shuffle
+> - No forced repeat
+> - You can modify the queue
+> - No ads between songs and in the UI
+
+#### To use:
+
+* No action necessary.
+
 ## [Song-Stats](./songstats/README.md)
 
 *Display the audio features of a song*
@@ -36,14 +51,6 @@ Add some spice with extensions to make spotify more enjoyable
 ``spicetify config experimental_features 1``
 ``spicetify apply``.
 You must also enable the "Enable Enhance Playlist UI and functionality" feature in the experimental features menu.
-
-## [Adblock](./adblock/README.md)
-
-*Disable ads and other annoying elements in Spotify*
-
-#### To use:
-
-* No action necessary.
 
 ## [FormatColors](./formatColors/README.md)
 

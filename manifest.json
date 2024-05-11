@@ -25,7 +25,7 @@
 	},
 	{
 		"name": "adblockify",
-		"description": "Disable ads and other annoying elements in Spotify. It also spoofs premium, so you can use premium features without paying",
+		"description": "Disable ads and other annoying elements in Spotify. You can also enjoy few premium features without paying for it",
 		"preview": "adblock/assets/preview.png",
 		"main": "adblock/adblock.js",
 		"readme": "adblock/README.md",

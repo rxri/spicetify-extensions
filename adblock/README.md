@@ -1,6 +1,13 @@
 # Adblock
 
-Disable ads and other annoying elements in Spotify for **[spicetify](https://github.com/spicetify/spicetify-cli)**. It also spoofs premium, so you can use premium features without paying
+Disable ads and other annoying elements in Spotify for **[spicetify](https://github.com/spicetify/spicetify-cli)**. You can also enjoy few premium features without paying for it
+
+> [!NOTE]
+> Premium features include:
+> - No forced shuffle
+> - No forced repeat
+> - You can modify the queue
+> - No ads between songs and in the UI
 
 ## Install
 
