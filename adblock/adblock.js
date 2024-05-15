@@ -150,10 +150,13 @@ const getSettingsClient = (cache) => {
             const expFeatures = JSON.parse(localStorage.getItem("spicetify-exp-features") || "{}");
             const hptoEsperanto = expFeatures.enableEsperantoMigration?.value;
             const inAppMessages = expFeatures.enableInAppMessaging?.value;
+            const upgradeCTA = expFeatures.hideUpgradeCTA?.value;
             if (!hptoEsperanto)
                 expFeatureOverride({ name: "enableEsperantoMigration", default: true });
             if (inAppMessages)
                 expFeatureOverride({ name: "enableInAppMessaging", default: false });
+            if (!upgradeCTA)
+                expFeatureOverride({ name: "hideUpgradeCTA", default: true });
         }
         catch (error) {
             console.error("adblockify: Failed inside `enableExperimentalFeatures` function", error);
