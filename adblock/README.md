@@ -8,10 +8,11 @@ Disable ads and other annoying elements in Spotify for **[spicetify](https://git
 > - No forced repeat
 > - You can modify the queue
 > - No ads between songs and in the UI
+> - No upsell popups about premium or everything else
 
 ## Install
 
-1. Copy `adblock.js` to extensions folder based on your OS, or install it via **[marketplace](https://github.com/spicetify/spicetify-marketplace)**
+1. Copy `adblock.js` to extensions folder based on your OS or install it via **[marketplace](https://github.com/spicetify/spicetify-marketplace)**
 
 | **Platform**   | **Path**                                                                             |
 |----------------|--------------------------------------------------------------------------------------|

@@ -12,6 +12,7 @@ Add some spice with extensions to make spotify more enjoyable
 > - No forced repeat
 > - You can modify the queue
 > - No ads between songs and in the UI
+> - No upsell popups about premium or everything else
 
 #### To use:
 
