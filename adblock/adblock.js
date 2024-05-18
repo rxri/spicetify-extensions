@@ -38,6 +38,17 @@ const getSlotsClient = (functionModules, transport) => {
         return null;
     }
 };
+const map = new Map();
+const retryCounter = (slotId, action) => {
+    if (!map.has(slotId))
+        map.set(slotId, { count: 0 });
+    if (action === "increment")
+        map.get(slotId).count++;
+    else if (action === "clear")
+        map.delete(slotId);
+    else if (action === "get")
+        return map.get(slotId)?.count;
+};
 (async function adblockify() {
     // @ts-expect-error: Events are not defined in types
     await new Promise(res => Spicetify.Events.platformLoaded.on(res));
@@ -69,7 +80,7 @@ const getSlotsClient = (functionModules, transport) => {
             await productState.putOverridesValues({ pairs: { ads: "0", catalogue: "premium", product: "premium", type: "premium" } });
         }
         catch (error) {
-            console.error("adblockify: Failed inside `disableAds` function", error);
+            console.error("adblockify: Failed inside `disableAds` function\n", error);
         }
     };
     const configureAdManagers = async () => {
@@ -91,7 +102,7 @@ const getSlotsClient = (functionModules, transport) => {
             setTimeout(disableAds, 100);
         }
         catch (error) {
-            console.error("adblockify: Failed inside `configureAdManagers` function", error);
+            console.error("adblockify: Failed inside `configureAdManagers` function\n", error);
         }
     };
     const bindToSlots = async () => {
@@ -112,8 +123,14 @@ const getSlotsClient = (functionModules, transport) => {
             updateSlotSettings(slotId);
         }
         catch (error) {
-            console.error("adblockify: Failed inside `handleAdSlot` function. Retrying in 100ms...", error);
-            setTimeout(handleAdSlot, 100, data);
+            console.error("adblockify: Failed inside `handleAdSlot` function. Retrying in 1 second...\n", error);
+            retryCounter(slotId, "increment");
+            if (retryCounter(slotId, "get") > 5) {
+                console.error(`adblockify: Failed inside \`handleAdSlot\` function for 5th time. Giving up...\nSlot id: ${slotId}.`);
+                retryCounter(slotId, "clear");
+                return;
+            }
+            setTimeout(handleAdSlot, 1 * 1000, data);
         }
         configureAdManagers();
     };
@@ -127,7 +144,7 @@ const getSlotsClient = (functionModules, transport) => {
             await settingsClient.updateDisplayTimeInterval({ slotId, timeInterval: "0" });
         }
         catch (error) {
-            console.error("adblockify: Failed inside `updateSlotSettings` function.", error);
+            console.error("adblockify: Failed inside `updateSlotSettings` function\n", error);
         }
     };
     const intervalUpdateSlotSettings = async () => {
@@ -140,7 +157,7 @@ const getSlotsClient = (functionModules, transport) => {
             audio.inStreamApi.adsCoreConnector.subscribeToSlot(slot, handleAdSlot);
         }
         catch (error) {
-            console.error("adblockify: Failed inside `subToSlot` function", error);
+            console.error("adblockify: Failed inside `subToSlot` function\n", error);
         }
     };
     const runObserver = () => {
@@ -183,7 +200,7 @@ const getSlotsClient = (functionModules, transport) => {
                 expFeatureOverride({ name: "hideUpgradeCTA", default: true });
         }
         catch (error) {
-            console.error("adblockify: Failed inside `enableExperimentalFeatures` function", error);
+            console.error("adblockify: Failed inside `enableExperimentalFeatures` function\n", error);
         }
     };
     enableExperimentalFeatures();

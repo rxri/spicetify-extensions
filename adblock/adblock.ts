@@ -100,6 +100,15 @@ const getSlotsClient = (functionModules: any[], transport: any): SlotsClient | n
 	}
 };
 
+const map = new Map();
+
+const retryCounter = (slotId: string, action: "increment" | "clear" | "get") => {
+	if (!map.has(slotId)) map.set(slotId, { count: 0 });
+	if (action === "increment") map.get(slotId).count++;
+	else if (action === "clear") map.delete(slotId);
+	else if (action === "get") return map.get(slotId)?.count;
+};
+
 (async function adblockify() {
 	// @ts-expect-error: Events are not defined in types
 	await new Promise(res => Spicetify.Events.platformLoaded.on(res));
@@ -134,7 +143,7 @@ const getSlotsClient = (functionModules: any[], transport: any): SlotsClient | n
 		try {
 			await productState.putOverridesValues({ pairs: { ads: "0", catalogue: "premium", product: "premium", type: "premium" } });
 		} catch (error: unknown) {
-			console.error("adblockify: Failed inside `disableAds` function", error);
+			console.error("adblockify: Failed inside `disableAds` function\n", error);
 		}
 	};
 
@@ -158,7 +167,7 @@ const getSlotsClient = (functionModules: any[], transport: any): SlotsClient | n
 			}
 			setTimeout(disableAds, 100);
 		} catch (error: unknown) {
-			console.error("adblockify: Failed inside `configureAdManagers` function", error);
+			console.error("adblockify: Failed inside `configureAdManagers` function\n", error);
 		}
 	};
 
@@ -179,8 +188,14 @@ const getSlotsClient = (functionModules: any[], transport: any): SlotsClient | n
 			if (slotsClient) slotsClient.clearAllAds({ slotId });
 			updateSlotSettings(slotId);
 		} catch (error: unknown) {
-			console.error("adblockify: Failed inside `handleAdSlot` function. Retrying in 100ms...", error);
-			setTimeout(handleAdSlot, 100, data);
+			console.error("adblockify: Failed inside `handleAdSlot` function. Retrying in 1 second...\n", error);
+			retryCounter(slotId, "increment");
+			if (retryCounter(slotId, "get") > 5) {
+				console.error(`adblockify: Failed inside \`handleAdSlot\` function for 5th time. Giving up...\nSlot id: ${slotId}.`);
+				retryCounter(slotId, "clear");
+				return;
+			}
+			setTimeout(handleAdSlot, 1 * 1000, data);
 		}
 		configureAdManagers();
 	};
@@ -193,7 +208,7 @@ const getSlotsClient = (functionModules: any[], transport: any): SlotsClient | n
 			await settingsClient.updateSlotEnabled({ slotId, enabled: false });
 			await settingsClient.updateDisplayTimeInterval({ slotId, timeInterval: "0" });
 		} catch (error: unknown) {
-			console.error("adblockify: Failed inside `updateSlotSettings` function.", error);
+			console.error("adblockify: Failed inside `updateSlotSettings` function\n", error);
 		}
 	};
 
@@ -207,7 +222,7 @@ const getSlotsClient = (functionModules: any[], transport: any): SlotsClient | n
 		try {
 			audio.inStreamApi.adsCoreConnector.subscribeToSlot(slot, handleAdSlot);
 		} catch (error: unknown) {
-			console.error("adblockify: Failed inside `subToSlot` function", error);
+			console.error("adblockify: Failed inside `subToSlot` function\n", error);
 		}
 	};
 
@@ -247,7 +262,7 @@ const getSlotsClient = (functionModules: any[], transport: any): SlotsClient | n
 			if (inAppMessages) expFeatureOverride({ name: "enableInAppMessaging", default: false });
 			if (!upgradeCTA) expFeatureOverride({ name: "hideUpgradeCTA", default: true });
 		} catch (error: unknown) {
-			console.error("adblockify: Failed inside `enableExperimentalFeatures` function", error);
+			console.error("adblockify: Failed inside `enableExperimentalFeatures` function\n", error);
 		}
 	};
 
