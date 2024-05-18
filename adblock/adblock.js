@@ -3,11 +3,20 @@ const loadWebpack = () => {
     try {
         const require = window.webpackChunkclient_web.push([[Symbol()], {}, (re) => re]);
         const cache = Object.keys(require.m).map(id => require(id));
-        return cache;
+        const modules = cache
+            .filter(module => typeof module === "object")
+            .flatMap(module => {
+            try {
+                return Object.values(module);
+            }
+            catch { }
+        });
+        const functionModules = modules.filter(module => typeof module === "function");
+        return { cache, functionModules };
     }
     catch (error) {
         console.error("adblockify: Failed to load webpack", error);
-        return [];
+        return { cache: [], functionModules: [] };
     }
 };
 const getSettingsClient = (cache) => {
@@ -16,6 +25,16 @@ const getSettingsClient = (cache) => {
     }
     catch (error) {
         console.error("adblockify: Failed to get ads settings client", error);
+        return null;
+    }
+};
+const getSlotsClient = (functionModules, transport) => {
+    try {
+        const slots = functionModules.find(m => m.SERVICE_ID === "spotify.ads.esperanto.slots.proto.Slots" || m.SERVICE_ID === "spotify.ads.esperanto.proto.Slots");
+        return new slots(transport);
+    }
+    catch (error) {
+        console.error("adblockify: Failed to get slots client", error);
         return null;
     }
 };
@@ -84,7 +103,12 @@ const getSettingsClient = (cache) => {
     const handleAdSlot = (data) => {
         const slotId = data?.adSlotEvent?.slotId;
         try {
-            audio.inStreamApi.adsCoreConnector.clearSlot(slotId);
+            const adsCoreConnector = audio.inStreamApi.adsCoreConnector;
+            if (typeof adsCoreConnector?.clearSlot === "function")
+                adsCoreConnector.clearSlot(slotId);
+            const slotsClient = getSlotsClient(webpackCache.functionModules, productState.transport);
+            if (slotsClient)
+                slotsClient.clearAllAds({ slotId });
             updateSlotSettings(slotId);
         }
         catch (error) {
@@ -95,7 +119,7 @@ const getSettingsClient = (cache) => {
     };
     const updateSlotSettings = async (slotId) => {
         try {
-            const settingsClient = getSettingsClient(webpackCache);
+            const settingsClient = getSettingsClient(webpackCache.cache);
             if (!settingsClient)
                 return;
             await settingsClient.updateStreamTimeInterval({ slotId, timeInterval: "0" });

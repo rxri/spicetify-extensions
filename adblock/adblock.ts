@@ -1,6 +1,7 @@
 interface ProductStateAPI {
 	putOverridesValues(params: { pairs: { [key: string]: string } }): Promise<void>;
 	subValues(params: { keys: string[] }, callback: () => void): Promise<void>;
+	transport: any;
 }
 
 interface AdManagers {
@@ -54,15 +55,27 @@ interface SettingsClient {
 	updateStreamTimeInterval(params: { slotId: string; timeInterval: string }): Promise<void>;
 }
 
+interface SlotsClient {
+	clearAllAds(params: { slotId: string }): Promise<void>;
+}
+
 const loadWebpack = () => {
 	try {
 		const require = window.webpackChunkclient_web.push([[Symbol()], {}, (re: any) => re]);
 		const cache = Object.keys(require.m).map(id => require(id));
+		const modules = cache
+			.filter(module => typeof module === "object")
+			.flatMap(module => {
+				try {
+					return Object.values(module);
+				} catch {}
+			});
+		const functionModules = modules.filter(module => typeof module === "function");
 
-		return cache;
+		return { cache, functionModules };
 	} catch (error) {
 		console.error("adblockify: Failed to load webpack", error);
-		return [];
+		return { cache: [], functionModules: [] };
 	}
 };
 
@@ -71,6 +84,18 @@ const getSettingsClient = (cache: any[]): SettingsClient | null => {
 		return cache.find((m: any) => m.settingsClient).settingsClient;
 	} catch (error) {
 		console.error("adblockify: Failed to get ads settings client", error);
+		return null;
+	}
+};
+
+const getSlotsClient = (functionModules: any[], transport: any): SlotsClient | null => {
+	try {
+		const slots = functionModules.find(
+			m => m.SERVICE_ID === "spotify.ads.esperanto.slots.proto.Slots" || m.SERVICE_ID === "spotify.ads.esperanto.proto.Slots"
+		);
+		return new slots(transport);
+	} catch (error) {
+		console.error("adblockify: Failed to get slots client", error);
 		return null;
 	}
 };
@@ -148,7 +173,10 @@ const getSettingsClient = (cache: any[]): SettingsClient | null => {
 		const slotId = data?.adSlotEvent?.slotId;
 
 		try {
-			audio.inStreamApi.adsCoreConnector.clearSlot(slotId);
+			const adsCoreConnector = audio.inStreamApi.adsCoreConnector;
+			if (typeof adsCoreConnector?.clearSlot === "function") adsCoreConnector.clearSlot(slotId);
+			const slotsClient = getSlotsClient(webpackCache.functionModules, productState.transport);
+			if (slotsClient) slotsClient.clearAllAds({ slotId });
 			updateSlotSettings(slotId);
 		} catch (error: unknown) {
 			console.error("adblockify: Failed inside `handleAdSlot` function. Retrying in 100ms...", error);
@@ -159,7 +187,7 @@ const getSettingsClient = (cache: any[]): SettingsClient | null => {
 
 	const updateSlotSettings = async (slotId: string) => {
 		try {
-			const settingsClient = getSettingsClient(webpackCache);
+			const settingsClient = getSettingsClient(webpackCache.cache);
 			if (!settingsClient) return;
 			await settingsClient.updateStreamTimeInterval({ slotId, timeInterval: "0" });
 			await settingsClient.updateSlotEnabled({ slotId, enabled: false });
