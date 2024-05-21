@@ -193,11 +193,11 @@ const retryCounter = (slotId, action) => {
             const inAppMessages = expFeatures.enableInAppMessaging?.value;
             const upgradeCTA = expFeatures.hideUpgradeCTA?.value;
             if (!hptoEsperanto)
-                expFeatureOverride({ name: "enableEsperantoMigration", default: true });
+                expFeatureOverride({ type: "bool", name: "enableEsperantoMigration", default: true });
             if (inAppMessages)
-                expFeatureOverride({ name: "enableInAppMessaging", default: false });
+                expFeatureOverride({ type: "bool", name: "enableInAppMessaging", default: false });
             if (!upgradeCTA)
-                expFeatureOverride({ name: "hideUpgradeCTA", default: true });
+                expFeatureOverride({ type: "bool", name: "hideUpgradeCTA", default: true });
         }
         catch (error) {
             console.error("adblockify: Failed inside `enableExperimentalFeatures` function\n", error);
