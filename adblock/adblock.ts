@@ -149,17 +149,19 @@ const retryCounter = (slotId: string, action: "increment" | "clear" | "get") => 
 
 	const configureAdManagers = async () => {
 		try {
-			const { billboard, leaderboard, inStreamApi, sponsoredPlaylist }: AdManagers = AdManagers;
+			const { billboard, leaderboard, sponsoredPlaylist }: AdManagers = AdManagers;
 
-			audio.audioApi.cosmosConnector.increaseStreamTime(-100000000000);
-			billboard.billboardApi.cosmosConnector.increaseStreamTime(-100000000000);
+			await CosmosAsync.post("sp://ads/v1/testing/playtime", { value: -100000000000 });
 
 			await audio.disable();
 			audio.isNewAdsNpvEnabled = false;
 			await billboard.disable();
 			await leaderboard.disableLeaderboard();
-			await inStreamApi.disable();
 			await sponsoredPlaylist.disable();
+			if (AdManagers?.inStreamApi) {
+				const { inStreamApi }: AdManagers = AdManagers;
+				await inStreamApi.disable();
+			}
 			if (AdManagers?.vto) {
 				const { vto }: AdManagers = AdManagers;
 				await vto.manager.disable();
@@ -182,7 +184,7 @@ const retryCounter = (slotId: string, action: "increment" | "clear" | "get") => 
 		const slotId = data?.adSlotEvent?.slotId;
 
 		try {
-			const adsCoreConnector = audio.inStreamApi.adsCoreConnector;
+			const adsCoreConnector = audio?.inStreamApi?.adsCoreConnector;
 			if (typeof adsCoreConnector?.clearSlot === "function") adsCoreConnector.clearSlot(slotId);
 			const slotsClient = getSlotsClient(webpackCache.functionModules, productState.transport);
 			if (slotsClient) slotsClient.clearAllAds({ slotId });
