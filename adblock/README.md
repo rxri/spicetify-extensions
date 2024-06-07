@@ -1,6 +1,6 @@
 # Adblock
 
-Disable ads and other annoying elements in Spotify for **[spicetify](https://github.com/spicetify/spicetify-cli)**. You can also enjoy few premium features without paying for it
+Disable ads and other annoying elements in Spotify for **[spicetify](https://github.com/spicetify/cli)**. You can also enjoy few premium features without paying for it
 
 > [!NOTE]
 > Premium features include:

@@ -1,6 +1,6 @@
 # FormatColors
 
-Convert colors defined in root to `color.ini` format with `FormatColors` for **[spicetify](https://github.com/spicetify/spicetify-cli)**
+Convert colors defined in root to `color.ini` format with `FormatColors` for **[spicetify](https://github.com/spicetify/cli)**
 
 * For use by theme developers, click the button and it will open a popup model. Click on any of the text to select the full text, then right click and hit copy.
 

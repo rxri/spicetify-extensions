@@ -1,6 +1,6 @@
 # PhraseToPlaylist
 
-Create a playlist based on the phrase with `PhraseToPlaylist` for **[spicetify](https://github.com/spicetify/spicetify-cli)**
+Create a playlist based on the phrase with `PhraseToPlaylist` for **[spicetify](https://github.com/spicetify/cli)**
 
 ## Install
 

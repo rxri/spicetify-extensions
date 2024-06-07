@@ -1,6 +1,6 @@
 # Writeify
 
-Take notes on songs with `Writeify` for **[spicetify](https://github.com/spicetify/spicetify-cli)**
+Take notes on songs with `Writeify` for **[spicetify](https://github.com/spicetify/cli)**
 
 * Right click any song or click it's note in the note column of the albums to write a note, remember to hit save!
 

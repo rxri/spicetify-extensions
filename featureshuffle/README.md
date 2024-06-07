@@ -1,6 +1,6 @@
 # FeatureShuffle
 
-Create a randomized playlist based on the audio features of a playlist with `FeatureShuffle` for **[spicetify](https://github.com/spicetify/spicetify-cli)**
+Create a randomized playlist based on the audio features of a playlist with `FeatureShuffle` for **[spicetify](https://github.com/spicetify/cli)**
 
 * Right click a playlist and click "Create Feature Based Playlist" (This process may take up to 3 minutes.)
 

@@ -1,6 +1,6 @@
 # songstats
 
-See audio features of the music you love with `Songstats` for **[spicetify](https://github.com/spicetify/spicetify-cli)**
+See audio features of the music you love with `Songstats` for **[spicetify](https://github.com/spicetify/cli)**
 
 * Right click a song and click "View Song Stats" to see it's audio features.
 

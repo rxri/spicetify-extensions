@@ -14,19 +14,9 @@ interface AdManagers {
 			};
 		};
 		isNewAdsNpvEnabled: boolean;
-		audioApi: {
-			cosmosConnector: {
-				increaseStreamTime(time: number): void;
-			};
-		};
 	};
 	billboard: {
 		disable(): Promise<void>;
-		billboardApi: {
-			cosmosConnector: {
-				increaseStreamTime(time: number): void;
-			};
-		};
 	};
 	leaderboard: {
 		disableLeaderboard(): Promise<void>;
@@ -50,6 +40,7 @@ interface Window {
 }
 
 interface SettingsClient {
+	updateAdServerEndpoint(params: { slotIds: string[]; url: string }): Promise<void>;
 	updateDisplayTimeInterval(params: { slotId: string; timeInterval: string }): Promise<void>;
 	updateSlotEnabled(params: { slotId: string; enabled: boolean }): Promise<void>;
 	updateStreamTimeInterval(params: { slotId: string; timeInterval: string }): Promise<void>;
@@ -206,6 +197,7 @@ const retryCounter = (slotId: string, action: "increment" | "clear" | "get") => 
 		try {
 			const settingsClient = getSettingsClient(webpackCache.cache);
 			if (!settingsClient) return;
+			await settingsClient.updateAdServerEndpoint({ slotIds: [slotId], url: "http://localhost/no_thanks" });
 			await settingsClient.updateStreamTimeInterval({ slotId, timeInterval: "0" });
 			await settingsClient.updateSlotEnabled({ slotId, enabled: false });
 			await settingsClient.updateDisplayTimeInterval({ slotId, timeInterval: "0" });

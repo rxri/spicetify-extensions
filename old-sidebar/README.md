@@ -1,6 +1,6 @@
 # OldSidebar
 
-Go back to the old sidebar with `OldSidebar` for **[spicetify](https://github.com/spicetify/spicetify-cli)**
+Go back to the old sidebar with `OldSidebar` for **[spicetify](https://github.com/spicetify/cli)**
 
 ## Install
 

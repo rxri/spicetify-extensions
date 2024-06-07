@@ -1,6 +1,6 @@
 # Wikify
 
-Learn more about an artist with `Wikify` for **[spicetify](https://github.com/spicetify/spicetify-cli)**
+Learn more about an artist with `Wikify` for **[spicetify](https://github.com/spicetify/cli)**
 
 * Right click an artist on spotify and click "View Wiki", it will display a Wikipedia page for the artist in your spotify client!
 
