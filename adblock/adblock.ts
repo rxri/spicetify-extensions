@@ -1,3 +1,7 @@
+/**
+ * @author ririxi
+ */
+
 interface ProductStateAPI {
 	putOverridesValues(params: { pairs: { [key: string]: string } }): Promise<void>;
 	subValues(params: { keys: string[] }, callback: () => void): Promise<void>;
@@ -197,7 +201,7 @@ const retryCounter = (slotId: string, action: "increment" | "clear" | "get") => 
 		try {
 			const settingsClient = getSettingsClient(webpackCache.cache);
 			if (!settingsClient) return;
-			await settingsClient.updateAdServerEndpoint({ slotIds: [slotId], url: "http://localhost/no_thanks" });
+			await settingsClient.updateAdServerEndpoint({ slotIds: [slotId], url: "http://localhost/no/thanks" });
 			await settingsClient.updateStreamTimeInterval({ slotId, timeInterval: "0" });
 			await settingsClient.updateSlotEnabled({ slotId, enabled: false });
 			await settingsClient.updateDisplayTimeInterval({ slotId, timeInterval: "0" });

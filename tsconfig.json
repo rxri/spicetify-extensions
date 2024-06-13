@@ -6,9 +6,10 @@
 		"target": "ES2021",
 		"verbatimModuleSyntax": true,
 		"allowJs": true,
+		"jsx": "react",
 		"strict": true,
 		"noUncheckedIndexedAccess": true,
 		"lib": ["ES2021", "DOM"]
 	},
-	"include": ["adblock/adblock.ts"]
+	"exclude": ["featureshuffle/*", "songstats/*", "wikify/*", "writeify/*", "old-sidebar/*", "formatColors/*"]
 }

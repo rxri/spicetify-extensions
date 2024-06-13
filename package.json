@@ -12,7 +12,8 @@
 		"pnpm": ">=9",
 		"yarn": "please-use-pnpm"
 	},
-	"dependencies": {
+	"devDependencies": {
+		"@types/react": "^18.3.3",
 		"typescript": "^5.4.5"
 	}
 }

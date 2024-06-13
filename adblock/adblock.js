@@ -1,4 +1,7 @@
 "use strict";
+/**
+ * @author ririxi
+ */
 const loadWebpack = () => {
     try {
         const require = window.webpackChunkclient_web.push([[Symbol()], {}, (re) => re]);
@@ -141,7 +144,7 @@ const retryCounter = (slotId, action) => {
             const settingsClient = getSettingsClient(webpackCache.cache);
             if (!settingsClient)
                 return;
-            await settingsClient.updateAdServerEndpoint({ slotIds: [slotId], url: "http://localhost/no_thanks" });
+            await settingsClient.updateAdServerEndpoint({ slotIds: [slotId], url: "http://localhost/no/thanks" });
             await settingsClient.updateStreamTimeInterval({ slotId, timeInterval: "0" });
             await settingsClient.updateSlotEnabled({ slotId, enabled: false });
             await settingsClient.updateDisplayTimeInterval({ slotId, timeInterval: "0" });

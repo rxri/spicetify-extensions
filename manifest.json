@@ -46,7 +46,11 @@
 		"preview": "phraseToPlaylist/phraseToPlaylist.png",
 		"main": "phraseToPlaylist/phraseToPlaylist.js",
 		"readme": "phraseToPlaylist/README.md",
-		"authors": [{ "name": "CharlieS1103", "url": "https://github.com/CharlieS1103" }, { "name": "MalTeeez", "url": "https://github.com/MalTeeez" }]
+		"authors": [
+			{ "name": "ririxi", "url": "https://github.com/rxri" },
+			{ "name": "CharlieS1103", "url": "https://github.com/CharlieS1103" },
+			{ "name": "MalTeeez", "url": "https://github.com/MalTeeez" }
+		]
 	},
 	{
 		"name": "Writeify",
