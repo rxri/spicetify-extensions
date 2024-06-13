@@ -55,10 +55,8 @@ const retryCounter = (slotId, action) => {
 (async function adblockify() {
     // @ts-expect-error: Events are not defined in types
     await new Promise(res => Spicetify.Events.platformLoaded.on(res));
-    if (!window.webpackChunkclient_web) {
-        setTimeout(adblockify, 50);
-        return;
-    }
+    // @ts-expect-error: Events are not defined in types
+    await new Promise(res => Spicetify.Events.webpackLoaded.on(res));
     const webpackCache = loadWebpack();
     // @ts-expect-error: expFeatureOverride is not defined in types
     const { CosmosAsync, Platform, expFeatureOverride, Locale } = Spicetify;

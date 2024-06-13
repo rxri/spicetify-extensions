@@ -102,10 +102,12 @@ const songMap = {
 (async function phraseToPlaylist() {
     // @ts-expect-error: Events are not defined in types
     await new Promise(res => Spicetify.Events.platformLoaded.on(res));
+    // @ts-expect-error: Events are not defined in types
+    await new Promise(res => Spicetify.Events.webpackLoaded.on(res));
     const { Platform, CosmosAsync, React, ReactDOM, ReactComponent } = Spicetify;
     const { ButtonPrimary } = ReactComponent;
-    if (!(Platform && CosmosAsync)) {
-        setTimeout(phraseToPlaylist, 300);
+    if (!CosmosAsync) {
+        setTimeout(phraseToPlaylist, 100);
         return;
     }
     new Spicetify.Topbar.Button("Phrase2Playlist", CONVERT_ICON, displayPhraseInput, false);
@@ -168,7 +170,7 @@ const songMap = {
     }
     async function searchSong(songName) {
         try {
-            const songJSON = await Spicetify.CosmosAsync.get(`https://api.spotify.com/v1/search?q=${songName}&type=track&limit=15&offset=0`);
+            const songJSON = await CosmosAsync.get(`https://api.spotify.com/v1/search?q=${songName}&type=track&limit=15&offset=0`);
             for (const item of songJSON.tracks.items) {
                 if (await isSameSong(songName, item.name))
                     return item.id;
@@ -194,12 +196,12 @@ const songMap = {
     async function createPlaylist(songArr, notfoundSongs) {
         const date = new Date();
         const locale = "en-GB";
-        const newPlaylist = await Spicetify.CosmosAsync.post("https://api.spotify.com/v1/me/playlists", {
+        const newPlaylist = await CosmosAsync.post("https://api.spotify.com/v1/me/playlists", {
             name: `Phrase2Playlist - ${date.toLocaleString(locale).slice(0, 10)}`,
             public: false,
         });
         const playlistID = newPlaylist.uri;
-        await Spicetify.Platform.PlaylistAPI.add(playlistID, songArr.filter(String), { before: 0 });
+        await Platform.PlaylistAPI.add(playlistID, songArr.filter(String), { before: 0 });
         Spicetify.showNotification(`Created new Phrase2Playlist playlist! ${notfoundSongs ? `(${notfoundSongs} songs not found)` : ""}`);
     }
 })();
