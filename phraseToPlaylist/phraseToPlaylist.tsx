@@ -131,7 +131,7 @@ interface PhraseToPlaylistProps {
 		return (
 			<>
 				<textarea
-					style={{ "border-radius": "5px", "background-color": "#D3D3D3", color: "test", "font-size": "14px" }}
+					style={{ "border-radius": "5px", "background-color": "#D3D3D3", color: "black", "font-size": "14px" }}
 					cols={50}
 					rows={4}
 					placeholder="Input phrase here!"

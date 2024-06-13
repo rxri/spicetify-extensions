@@ -118,7 +118,7 @@ const songMap = {
             onSubmit(phrase);
         };
         return (React.createElement(React.Fragment, null,
-            React.createElement("textarea", { style: { "border-radius": "5px", "background-color": "#D3D3D3", color: "test", "font-size": "14px" }, cols: 50, rows: 4, placeholder: "Input phrase here!", value: phrase, onChange: (e) => setPhrase(e.target.value) }),
+            React.createElement("textarea", { style: { "border-radius": "5px", "background-color": "#D3D3D3", color: "black", "font-size": "14px" }, cols: 50, rows: 4, placeholder: "Input phrase here!", value: phrase, onChange: (e) => setPhrase(e.target.value) }),
             React.createElement("div", { style: { display: "flex", "flex-direction": "row", "justify-content": "space-between" } },
                 React.createElement("span", { className: "phrase-loading-indicator" }, loadingIndicator),
                 React.createElement(ButtonPrimary, { size: "sm", onClick: handleSubmit }, "Submit Phrase"))));
