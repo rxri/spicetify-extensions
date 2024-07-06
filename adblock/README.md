@@ -2,6 +2,8 @@
 
 Disable ads and other annoying elements in Spotify for **[spicetify](https://github.com/spicetify/cli)**. You can also enjoy few premium features without paying for it
 
+**It doesn't work on Spotify `1.2.41` with spicetify `v2.36.13`. Update spicetify to `v2.36.14` to use adblock on `1.2.41`.**
+
 > [!NOTE]
 > Premium features include:
 > - No forced shuffle
