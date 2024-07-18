@@ -169,7 +169,7 @@ const retryCounter = (slotId: string, action: "increment" | "clear" | "get") => 
 	const bindToSlots = async () => {
 		for (const slot of slots) {
 			subToSlot(slot.slot_id);
-			handleAdSlot({ adSlotEvent: { slotId: slot.slot_id } });
+			setTimeout(() => handleAdSlot({ adSlotEvent: { slotId: slot.slot_id } }), 50);
 		}
 	};
 
