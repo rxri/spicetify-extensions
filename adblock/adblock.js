@@ -60,6 +60,7 @@ const retryCounter = (slotId, action) => {
     const webpackCache = loadWebpack();
     // @ts-expect-error: expFeatureOverride is not defined in types
     const { CosmosAsync, Platform, expFeatureOverride, Locale } = Spicetify;
+    const { LocalStorageAPI } = Platform;
     const { AdManagers } = Platform;
     const { audio } = AdManagers;
     const { UserAPI } = Platform;
@@ -202,17 +203,22 @@ const retryCounter = (slotId, action) => {
                 expFeatureOverride({ type: "bool", name: "enableInAppMessaging", default: false });
             if (!upgradeCTA)
                 expFeatureOverride({ type: "bool", name: "hideUpgradeCTA", default: true });
+            const expFeaturesOverride = LocalStorageAPI.getItem("remote-config-overrides");
+            if (!expFeaturesOverride)
+                return;
+            const overrides = { ...expFeaturesOverride, enableEsperantoMigration: true, enableInAppMessaging: false, hideUpgradeCTA: true };
+            LocalStorageAPI.setItem("remote-config-overrides", overrides);
         }
         catch (error) {
             console.error("adblockify: Failed inside `enableExperimentalFeatures` function\n", error);
         }
     };
-    enableExperimentalFeatures();
     bindToSlots();
     hideAdLikeElements();
     // to enable one day if disabling `enableInAppMessages` exp feature doesn't work
     //runObserver();
     productState.subValues({ keys: ["ads", "catalogue", "product", "type"] }, () => configureAdManagers());
+    setTimeout(enableExperimentalFeatures, 1 * 1000);
     // Update slot settings after 5 seconds... idk why, don't ask me why, it just works
     setTimeout(intervalUpdateSlotSettings, 5 * 1000);
 })();
