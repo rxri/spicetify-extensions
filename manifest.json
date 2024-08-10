@@ -25,12 +25,12 @@
 	},
 	{
 		"name": "adblockify",
-		"description": "Disable ads and other annoying elements in Spotify. You can also enjoy few premium features without paying for it",
+		"description": "Stream Spotify music without interruptions - Block ads instantly, with ease.",
 		"preview": "adblock/assets/preview.png",
 		"main": "adblock/adblock.js",
 		"readme": "adblock/README.md",
 		"authors": [{ "name": "ririxi", "url": "https://github.com/rxri" }],
-		"tags": ["ads", "ad", "block", "remove", "disable", "adblock"]
+		"tags": ["ads", "block", "remove", "disable"]
 	},
 	{
 		"name": "Format colors",

@@ -11,7 +11,7 @@ Create a randomized playlist based on the audio features of a playlist with `Fea
 | **Platform**   | **Path**                                                                             |
 |----------------|--------------------------------------------------------------------------------------|
 | **Windows**    | `%appdata%\spicetify\Extensions\`                                                    |
-| **Linux**      | `~/.config/spicetify/Extensions` or `$XDG_CONFIG_HOME/.config/spicetify/Extensions/` |
+| **Linux**      | `~/.config/spicetify/Extensions` or `$XDG_CONFIG_HOME/spicetify/Extensions/` |
 | **MacOS**      | `~/.config/spicetify/Extensions` or `~/.spicetify/Extensions`                        |
 
 After putting the extension file into the correct folder, run the following command to install the extension or install through marketplace:

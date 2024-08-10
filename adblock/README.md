@@ -1,16 +1,21 @@
-# Adblock
+# adblockify
 
-Disable ads and other annoying elements in Spotify for **[spicetify](https://github.com/spicetify/cli)**. You can also enjoy few premium features without paying for it
-
-**It doesn't work on Spotify `1.2.41` with spicetify `v2.36.13`. Update spicetify to `v2.36.14` to use adblock on `1.2.41`.**
+Stream Spotify music without interruptions - Block ads instantly, with ease.
 
 > [!NOTE]
 > Premium features include:
 > - No forced shuffle
 > - No forced repeat
-> - You can modify the queue
+> - Modifiable queue
 > - No ads between songs and in the UI
-> - No upsell popups about premium or everything else
+> - No upsell popups about premium or anything else
+
+> [!IMPORTANT]
+> This extension **won't**:
+> - Unlock native lyrics page
+> - Let you download songs
+> - Allow to change song quality to `High`
+> - Allow you to listen with friends in Jams
 
 ## Install
 
@@ -19,7 +24,7 @@ Disable ads and other annoying elements in Spotify for **[spicetify](https://git
 | **Platform**   | **Path**                                                                             |
 |----------------|--------------------------------------------------------------------------------------|
 | **Windows**    | `%appdata%\spicetify\Extensions\`                                                    |
-| **Linux**      | `~/.config/spicetify/Extensions` or `$XDG_CONFIG_HOME/.config/spicetify/Extensions/` |
+| **Linux**      | `~/.config/spicetify/Extensions` or `$XDG_CONFIG_HOME/spicetify/Extensions/`         |
 | **MacOS**      | `~/.config/spicetify/Extensions` or `~/.spicetify/Extensions`                        |
 
 After putting the extension file into the correct folder, run the following command to install the extension or install through marketplace:

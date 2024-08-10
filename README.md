@@ -1,26 +1,28 @@
-# spicetify-extensions
+# Spicetify extensions
 
-Add some spice with extensions to make spotify more enjoyable
+## [adblockify](./adblock/README.md)
 
-## [Adblock](./adblock/README.md)
-
-*Disable ads and other annoying elements in Spotify. You can also enjoy few premium features without paying for it*
+Stream Spotify music without interruptions - Block ads instantly, with ease.
 
 > [!NOTE]
 > Premium features include:
 > - No forced shuffle
 > - No forced repeat
-> - You can modify the queue
+> - Modifiable queue
 > - No ads between songs and in the UI
-> - No upsell popups about premium or everything else
+> - No upsell popups about premium or anything else
 
-#### To use:
+> [!IMPORTANT]
+> This extension **won't**:
+> - Unlock native lyrics page
+> - Let you download songs
+> - Allow to change song quality to `High`
+> - Allow you to listen with friends in Jams
 
-* No action necessary.
 
 ## [Song-Stats](./songstats/README.md)
 
-*Display the audio features of a song*
+Display the audio features of a song
 
 #### To use:
 
@@ -28,7 +30,7 @@ Add some spice with extensions to make spotify more enjoyable
 
 ## [Feature Shuffle](./featureshuffle/README.md)
 
-*Create a randomized playlist based on the average audio features of the clicked playlist*
+Create a randomized playlist based on the average audio features of the clicked playlist
 
 #### To use:
 
@@ -36,7 +38,7 @@ Add some spice with extensions to make spotify more enjoyable
 
 ## [Wikify](./wikify/README.md)
 
-*Display an Artists Wikipedia page and learn more about them!*
+Display an Artists Wikipedia page and learn more about them!
 
 #### To use:
 
@@ -44,7 +46,7 @@ Add some spice with extensions to make spotify more enjoyable
 
 ## [FixEnhance](./old-sidebar/README.md)
 
-*Patch spotify enhance playlist feature (Spotify patched it themselves, however if you prefer an old version this should fix it for you)*
+Patch spotify enhance playlist feature (Spotify patched it themselves, however if you prefer an old version this should fix it for you)
 
 #### To use:
 
@@ -55,7 +57,7 @@ You must also enable the "Enable Enhance Playlist UI and functionality" feature 
 
 ## [FormatColors](./formatColors/README.md)
 
-*Convert the current colors defined in root to color.ini format, made for Theme Developers*
+Convert the current colors defined in root to color.ini format, made for Theme Developers
 
 #### To use:
 
@@ -63,11 +65,11 @@ You must also enable the "Enable Enhance Playlist UI and functionality" feature 
 
 ## [PhraseToPlaylist](./phraseToPlaylist/README.md)
 
-*Convert a phrase into a playlist with songs arraged to make that phrase*
+Convert a phrase into a playlist with songs arraged to make that phrase
 
 #### To use:
 
 * Click the button on the topbar, enter phrase, click submit.
 
 -----
-Most of these extensions are made by [CharlieS1103](https://github.com/CharlieS1103).
+Most of these extensions are made by [CharlieS1103](https://github.com/CharlieS1103) except [adblockify](./adblock/README.md).
