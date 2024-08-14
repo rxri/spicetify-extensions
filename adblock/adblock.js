@@ -197,16 +197,25 @@ const retryCounter = (slotId, action) => {
             const hptoEsperanto = expFeatures.enableEsperantoMigration?.value;
             const inAppMessages = expFeatures.enableInAppMessaging?.value;
             const upgradeCTA = expFeatures.hideUpgradeCTA?.value;
+            const smartShuffle = expFeatures.enableSmartShuffle?.value;
             if (!hptoEsperanto)
                 expFeatureOverride({ type: "bool", name: "enableEsperantoMigration", default: true });
             if (inAppMessages)
                 expFeatureOverride({ type: "bool", name: "enableInAppMessaging", default: false });
             if (!upgradeCTA)
                 expFeatureOverride({ type: "bool", name: "hideUpgradeCTA", default: true });
+            if (smartShuffle)
+                expFeatureOverride({ type: "bool", name: "enableSmartShuffle", default: false });
             const expFeaturesOverride = LocalStorageAPI.getItem("remote-config-overrides");
             if (!expFeaturesOverride)
                 return;
-            const overrides = { ...expFeaturesOverride, enableEsperantoMigration: true, enableInAppMessaging: false, hideUpgradeCTA: true };
+            const overrides = {
+                ...expFeaturesOverride,
+                enableEsperantoMigration: true,
+                enableInAppMessaging: false,
+                hideUpgradeCTA: true,
+                enableSmartShuffle: false,
+            };
             LocalStorageAPI.setItem("remote-config-overrides", overrides);
         }
         catch (error) {
@@ -218,7 +227,7 @@ const retryCounter = (slotId, action) => {
     // to enable one day if disabling `enableInAppMessages` exp feature doesn't work
     //runObserver();
     productState.subValues({ keys: ["ads", "catalogue", "product", "type"] }, () => configureAdManagers());
-    setTimeout(enableExperimentalFeatures, 1 * 1000);
+    setTimeout(enableExperimentalFeatures, 1 * 1500);
     // Update slot settings after 5 seconds... idk why, don't ask me why, it just works
     setTimeout(intervalUpdateSlotSettings, 5 * 1000);
 })();

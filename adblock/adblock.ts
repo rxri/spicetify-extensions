@@ -254,15 +254,23 @@ const retryCounter = (slotId: string, action: "increment" | "clear" | "get") => 
 			const hptoEsperanto = expFeatures.enableEsperantoMigration?.value;
 			const inAppMessages = expFeatures.enableInAppMessaging?.value;
 			const upgradeCTA = expFeatures.hideUpgradeCTA?.value;
+			const smartShuffle = expFeatures.enableSmartShuffle?.value;
 
 			if (!hptoEsperanto) expFeatureOverride({ type: "bool", name: "enableEsperantoMigration", default: true });
 			if (inAppMessages) expFeatureOverride({ type: "bool", name: "enableInAppMessaging", default: false });
 			if (!upgradeCTA) expFeatureOverride({ type: "bool", name: "hideUpgradeCTA", default: true });
+			if (smartShuffle) expFeatureOverride({ type: "bool", name: "enableSmartShuffle", default: false });
 
 			const expFeaturesOverride = LocalStorageAPI.getItem("remote-config-overrides");
 			if (!expFeaturesOverride) return;
 
-			const overrides = { ...expFeaturesOverride, enableEsperantoMigration: true, enableInAppMessaging: false, hideUpgradeCTA: true };
+			const overrides = {
+				...expFeaturesOverride,
+				enableEsperantoMigration: true,
+				enableInAppMessaging: false,
+				hideUpgradeCTA: true,
+				enableSmartShuffle: false,
+			};
 			LocalStorageAPI.setItem("remote-config-overrides", overrides);
 		} catch (error: unknown) {
 			console.error("adblockify: Failed inside `enableExperimentalFeatures` function\n", error);
