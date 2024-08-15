@@ -111,9 +111,8 @@ const retryCounter = (slotId: string, action: "increment" | "clear" | "get") => 
 	await new Promise(res => Spicetify.Events.webpackLoaded.on(res));
 	const webpackCache = loadWebpack();
 
-	// @ts-expect-error: expFeatureOverride is not defined in types
-	const { CosmosAsync, Platform, expFeatureOverride, Locale } = Spicetify;
-	const { LocalStorageAPI } = Platform;
+	// @ts-expect-error: createInternalMap, RemoteConfigResolver is not defined in types
+	const { CosmosAsync, Platform, createInternalMap, Locale, RemoteConfigResolver } = Spicetify;
 	const { AdManagers } = Platform;
 	const { audio }: AdManagers = AdManagers;
 	const { UserAPI } = Platform;
@@ -251,27 +250,20 @@ const retryCounter = (slotId: string, action: "increment" | "clear" | "get") => 
 	const enableExperimentalFeatures = async () => {
 		try {
 			const expFeatures = JSON.parse(localStorage.getItem("spicetify-exp-features") || "{}");
-			const hptoEsperanto = expFeatures.enableEsperantoMigration?.value;
-			const inAppMessages = expFeatures.enableInAppMessaging?.value;
-			const upgradeCTA = expFeatures.hideUpgradeCTA?.value;
-			const smartShuffle = expFeatures.enableSmartShuffle?.value;
-
-			if (!hptoEsperanto) expFeatureOverride({ type: "bool", name: "enableEsperantoMigration", default: true });
-			if (inAppMessages) expFeatureOverride({ type: "bool", name: "enableInAppMessaging", default: false });
-			if (!upgradeCTA) expFeatureOverride({ type: "bool", name: "hideUpgradeCTA", default: true });
-			if (smartShuffle) expFeatureOverride({ type: "bool", name: "enableSmartShuffle", default: false });
-
-			const expFeaturesOverride = LocalStorageAPI.getItem("remote-config-overrides");
-			if (!expFeaturesOverride) return;
+			expFeatures.enableEsperantoMigration.value = true;
+			expFeatures.enableInAppMessaging.value = false;
+			expFeatures.hideUpgradeCTA.value = true;
+			expFeatures.enableSmartShuffle.value = false;
+			localStorage.setItem("spicetify-exp-features", JSON.stringify(expFeatures));
 
 			const overrides = {
-				...expFeaturesOverride,
 				enableEsperantoMigration: true,
 				enableInAppMessaging: false,
 				hideUpgradeCTA: true,
 				enableSmartShuffle: false,
 			};
-			LocalStorageAPI.setItem("remote-config-overrides", overrides);
+			const map = createInternalMap(overrides);
+			RemoteConfigResolver.value.setOverrides(map);
 		} catch (error: unknown) {
 			console.error("adblockify: Failed inside `enableExperimentalFeatures` function\n", error);
 		}
@@ -282,7 +274,8 @@ const retryCounter = (slotId: string, action: "increment" | "clear" | "get") => 
 	// to enable one day if disabling `enableInAppMessages` exp feature doesn't work
 	//runObserver();
 	productState.subValues({ keys: ["ads", "catalogue", "product", "type"] }, () => configureAdManagers());
-	setTimeout(enableExperimentalFeatures, 1 * 1500);
+	enableExperimentalFeatures();
+	setTimeout(enableExperimentalFeatures, 3 * 1000);
 
 	// Update slot settings after 5 seconds... idk why, don't ask me why, it just works
 	setTimeout(intervalUpdateSlotSettings, 5 * 1000);
