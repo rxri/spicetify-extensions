@@ -112,15 +112,20 @@ const retryCounter = (slotId: string, action: "increment" | "clear" | "get") => 
 	const webpackCache = loadWebpack();
 
 	// @ts-expect-error: createInternalMap, RemoteConfigResolver is not defined in types
-	const { CosmosAsync, Platform, createInternalMap, Locale, RemoteConfigResolver } = Spicetify;
+	const { Platform, createInternalMap, Locale, RemoteConfigResolver } = Spicetify;
 	const { AdManagers } = Platform;
-	const { audio }: AdManagers = AdManagers;
-	const { UserAPI } = Platform;
-	const productState: ProductStateAPI = UserAPI._product_state || UserAPI._product_state_service || Platform?.ProductStateAPI?.productStateApi;
-	if (!CosmosAsync) {
+	if (!AdManagers?.audio || Object.keys(AdManagers).length === 0) {
 		setTimeout(adblockify, 100);
 		return;
 	}
+	const { audio }: AdManagers = AdManagers;
+	const { UserAPI } = Platform;
+	const productState: ProductStateAPI = UserAPI._product_state || UserAPI._product_state_service || Platform?.ProductStateAPI?.productStateApi;
+	if (!Spicetify?.CosmosAsync) {
+		setTimeout(adblockify, 100);
+		return;
+	}
+	const { CosmosAsync } = Spicetify;
 	const slots = await CosmosAsync.get("sp://ads/v1/slots");
 
 	const hideAdLikeElements = () => {
