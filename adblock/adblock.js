@@ -198,10 +198,13 @@ const retryCounter = (slotId, action) => {
     const enableExperimentalFeatures = async () => {
         try {
             const expFeatures = JSON.parse(localStorage.getItem("spicetify-exp-features") || "{}");
-            expFeatures.enableEsperantoMigration.value = true;
-            expFeatures.enableInAppMessaging.value = false;
-            expFeatures.hideUpgradeCTA.value = true;
-            expFeatures.enableSmartShuffle.value = false;
+            if (typeof expFeatures?.enableEsperantoMigration?.value !== "undefined")
+                expFeatures.enableEsperantoMigration.value = true;
+            if (typeof expFeatures?.enableInAppMessaging?.value !== "undefined")
+                expFeatures.enableInAppMessaging.value = false;
+            if (typeof expFeatures?.hideUpgradeCTA?.value !== "undefined")
+                expFeatures.hideUpgradeCTA.value = true;
+            // if (typeof expFeatures?.enableSmartShuffle?.value !== "undefined") expFeatures.enableSmartShuffle.value = false;
             localStorage.setItem("spicetify-exp-features", JSON.stringify(expFeatures));
             const overrides = {
                 enableEsperantoMigration: true,
