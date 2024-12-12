@@ -258,6 +258,7 @@ const retryCounter = (slotId: string, action: "increment" | "clear" | "get") => 
 			if (typeof expFeatures?.enableEsperantoMigration?.value !== "undefined") expFeatures.enableEsperantoMigration.value = true;
 			if (typeof expFeatures?.enableInAppMessaging?.value !== "undefined") expFeatures.enableInAppMessaging.value = false;
 			if (typeof expFeatures?.hideUpgradeCTA?.value !== "undefined") expFeatures.hideUpgradeCTA.value = true;
+			if (typeof expFeatures?.enablePremiumUserForMiniPlayer?.value !== "undefined") expFeatures.enablePremiumUserForMiniPlayer.value = true;
 			// if (typeof expFeatures?.enableSmartShuffle?.value !== "undefined") expFeatures.enableSmartShuffle.value = false;
 			localStorage.setItem("spicetify-exp-features", JSON.stringify(expFeatures));
 
@@ -266,6 +267,7 @@ const retryCounter = (slotId: string, action: "increment" | "clear" | "get") => 
 				enableInAppMessaging: false,
 				hideUpgradeCTA: true,
 				//enableSmartShuffle: false,
+				enablePremiumUserForMiniPlayer: true,
 			};
 			const map = createInternalMap(overrides);
 			RemoteConfigResolver.value.setOverrides(map);

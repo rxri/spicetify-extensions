@@ -204,6 +204,8 @@ const retryCounter = (slotId, action) => {
                 expFeatures.enableInAppMessaging.value = false;
             if (typeof expFeatures?.hideUpgradeCTA?.value !== "undefined")
                 expFeatures.hideUpgradeCTA.value = true;
+            if (typeof expFeatures?.enablePremiumUserForMiniPlayer?.value !== "undefined")
+                expFeatures.enablePremiumUserForMiniPlayer.value = true;
             // if (typeof expFeatures?.enableSmartShuffle?.value !== "undefined") expFeatures.enableSmartShuffle.value = false;
             localStorage.setItem("spicetify-exp-features", JSON.stringify(expFeatures));
             const overrides = {
@@ -211,6 +213,7 @@ const retryCounter = (slotId, action) => {
                 enableInAppMessaging: false,
                 hideUpgradeCTA: true,
                 //enableSmartShuffle: false,
+                enablePremiumUserForMiniPlayer: true,
             };
             const map = createInternalMap(overrides);
             RemoteConfigResolver.value.setOverrides(map);
