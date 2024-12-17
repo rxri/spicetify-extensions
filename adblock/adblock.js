@@ -22,9 +22,14 @@ const loadWebpack = () => {
         return { cache: [], functionModules: [] };
     }
 };
-const getSettingsClient = (cache) => {
+const getSettingsClient = (cache, functionModules = [], transport = {}) => {
     try {
-        return cache.find((m) => m.settingsClient).settingsClient;
+        const settingsClient = cache.find((m) => m.settingsClient).settingsClient;
+        if (!settingsClient) {
+            const settings = functionModules.find(m => m.SERVICE_ID === "spotify.ads.esperanto.settings.proto.Settings" || m.SERVICE_ID === "spotify.ads.esperanto.proto.Settings");
+            return new settings(transport);
+        }
+        return settingsClient;
     }
     catch (error) {
         console.error("adblockify: Failed to get ads settings client", error);
@@ -144,7 +149,7 @@ const retryCounter = (slotId, action) => {
     };
     const updateSlotSettings = async (slotId) => {
         try {
-            const settingsClient = getSettingsClient(webpackCache.cache);
+            const settingsClient = getSettingsClient(webpackCache.cache, webpackCache.functionModules, productState.transport);
             if (!settingsClient)
                 return;
             await settingsClient.updateAdServerEndpoint({ slotIds: [slotId], url: "http://localhost/no/thanks" });
