@@ -24,9 +24,9 @@ const loadWebpack = () => {
 };
 const getSettingsClient = (cache, functionModules = [], transport = {}) => {
     try {
-        const settingsClient = cache.find((m) => m.settingsClient).settingsClient;
+        const settingsClient = cache.find((m) => m?.settingsClient)?.settingsClient;
         if (!settingsClient) {
-            const settings = functionModules.find(m => m.SERVICE_ID === "spotify.ads.esperanto.settings.proto.Settings" || m.SERVICE_ID === "spotify.ads.esperanto.proto.Settings");
+            const settings = functionModules.find(m => m?.SERVICE_ID === "spotify.ads.esperanto.settings.proto.Settings" || m?.SERVICE_ID === "spotify.ads.esperanto.proto.Settings");
             return new settings(transport);
         }
         return settingsClient;
