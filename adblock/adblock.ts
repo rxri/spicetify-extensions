@@ -283,6 +283,26 @@ const retryCounter = (slotId: string, action: "increment" | "clear" | "get") => 
 		}
 	};
 
+	const checkSpotifyVersion = (): boolean => {
+		const version = Spicetify.Platform.version.split(".").map((i: string) => Number.parseInt(i));
+		if (version[0] === 1 && version[1] >= 2 && version[2] >= 56) {
+			console.error("adblockify: Unsupported version of spotify.");
+			// @ts-expect-error: Snackbar is not defined in types
+			Spicetify.Snackbar.enqueueSnackbar(
+				"Spotify version `1.2.56` and higher are NOT supported at this moment. Please downgrade to `1.2.55` to use adblockify.",
+				{
+					variant: "error",
+					autoHideDuration: 10000,
+				}
+			);
+
+			return true;
+		}
+
+		return false;
+	};
+
+	if (checkSpotifyVersion()) return;
 	bindToSlots();
 	hideAdLikeElements();
 	// to enable one day if disabling `enableInAppMessages` exp feature doesn't work
