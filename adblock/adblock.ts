@@ -286,10 +286,10 @@ const retryCounter = (slotId: string, action: "increment" | "clear" | "get") => 
 	const checkSpotifyVersion = (): boolean => {
 		const version = Spicetify.Platform.version.split(".").map((i: string) => Number.parseInt(i));
 		if (version[0] === 1 && version[1] >= 2 && version[2] >= 56) {
-			console.error("adblockify: Unsupported version of spotify.");
+			console.error("adblockify: Unsupported version of spotify. Not launching further");
 			// @ts-expect-error: Snackbar is not defined in types
 			Spicetify.Snackbar.enqueueSnackbar(
-				"Spotify version `1.2.56` and higher are NOT supported at this moment. Please downgrade to `1.2.55` to use adblockify.",
+				"adblockify: Spotify version `1.2.56` and higher are NOT supported at this moment. Spicetify does not support these at this moment either. Please downgrade to `1.2.55` to use adblockify and block Spotify updates",
 				{
 					variant: "error",
 					autoHideDuration: 10000,
