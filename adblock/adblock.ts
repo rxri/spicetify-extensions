@@ -118,8 +118,7 @@ const retryCounter = (slotId: string, action: "increment" | "clear" | "get") => 
 	await new Promise(res => Spicetify.Events.webpackLoaded.on(res));
 	const webpackCache = loadWebpack();
 
-	// @ts-expect-error: createInternalMap, RemoteConfigResolver is not defined in types
-	const { Platform, createInternalMap, Locale, RemoteConfigResolver } = Spicetify;
+	const { Platform, Locale } = Spicetify;
 	const { AdManagers } = Platform;
 	if (!AdManagers?.audio || Object.keys(AdManagers).length === 0) {
 		setTimeout(adblockify, 100);
@@ -266,43 +265,52 @@ const retryCounter = (slotId: string, action: "increment" | "clear" | "get") => 
 			if (typeof expFeatures?.enableInAppMessaging?.value !== "undefined") expFeatures.enableInAppMessaging.value = false;
 			if (typeof expFeatures?.hideUpgradeCTA?.value !== "undefined") expFeatures.hideUpgradeCTA.value = true;
 			if (typeof expFeatures?.enablePremiumUserForMiniPlayer?.value !== "undefined") expFeatures.enablePremiumUserForMiniPlayer.value = true;
-			// if (typeof expFeatures?.enableSmartShuffle?.value !== "undefined") expFeatures.enableSmartShuffle.value = false;
 			localStorage.setItem("spicetify-exp-features", JSON.stringify(expFeatures));
-
 			const overrides = {
 				enableEsperantoMigration: true,
 				enableInAppMessaging: false,
 				hideUpgradeCTA: true,
-				//enableSmartShuffle: false,
 				enablePremiumUserForMiniPlayer: true,
 			};
-			const map = createInternalMap(overrides);
-			RemoteConfigResolver.value.setOverrides(map);
+
+			// @ts-expect-error: RemoteConfigResolver is not defined in types
+			if (Spicetify?.RemoteConfigResolver) {
+				// @ts-expect-error: createInternalMap is not defined in types
+				const map = Spicetify.createInternalMap(overrides);
+				// @ts-expect-error: RemoteConfigResolver is not defined in types
+				Spicetify.RemoteConfigResolver.value.setOverrides(map);
+			} else if (Spicetify.Platform?.RemoteConfigDebugAPI) {
+				const RemoteConfigDebugAPI = Spicetify.Platform.RemoteConfigDebugAPI;
+
+				for (const [key, value] of Object.entries(overrides)) {
+					await RemoteConfigDebugAPI.setOverride({ source: "web", type: "boolean", name: key }, value);
+				}
+			}
 		} catch (error: unknown) {
 			console.error("adblockify: Failed inside `enableExperimentalFeatures` function\n", error);
 		}
 	};
 
-	const checkSpotifyVersion = (): boolean => {
-		const version = Spicetify.Platform.version.split(".").map((i: string) => Number.parseInt(i));
-		if (version[0] === 1 && version[1] >= 2 && version[2] >= 56) {
-			console.error("adblockify: Unsupported version of spotify. Not launching further");
-			// @ts-expect-error: Snackbar is not defined in types
-			Spicetify.Snackbar.enqueueSnackbar(
-				"adblockify: Spotify version `1.2.56` and higher are NOT supported at this moment. Spicetify does not support these at this moment either. Please downgrade to `1.2.55` to use adblockify and block Spotify updates",
-				{
-					variant: "error",
-					autoHideDuration: 10000,
-				}
-			);
+	// const checkSpotifyVersion = (): boolean => {
+	// 	const version = Spicetify.Platform.version.split(".").map((i: string) => Number.parseInt(i));
+	// 	if (version[0] === 1 && version[1] >= 2 && version[2] >= 56) {
+	// 		console.error("adblockify: Unsupported version of spotify. Not launching further");
+	// 		// @ts-expect-error: Snackbar is not defined in types
+	// 		Spicetify.Snackbar.enqueueSnackbar(
+	// 			"adblockify: Spotify version `1.2.56` and higher are NOT supported at this moment. Spicetify does not support these at this moment either. Please downgrade to `1.2.55` to use adblockify and block Spotify updates",
+	// 			{
+	// 				variant: "error",
+	// 				autoHideDuration: 10000,
+	// 			}
+	// 		);
 
-			return true;
-		}
+	// 		return true;
+	// 	}
 
-		return false;
-	};
+	// 	return false;
+	// };
 
-	if (checkSpotifyVersion()) return;
+	// if (checkSpotifyVersion()) return;
 	bindToSlots();
 	hideAdLikeElements();
 	// to enable one day if disabling `enableInAppMessages` exp feature doesn't work

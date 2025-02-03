@@ -4,22 +4,19 @@
 
 Stream Spotify music without interruptions - Block ads instantly, with ease.
 
-> [!IMPORTANT]
-> Adblockify **WAS NOT** responsible for "Something went wrong" issue. It was entirely spicetify issue that has been fixed in `v2.38.7`. Please don't spread misinformation.
-
 > [!NOTE]
 > Premium features include:
 > - No forced shuffle
 > - No forced repeat
 > - Modifiable queue
 > - No ads between songs and in the UI
-> - No upsell popups about premium or anything else
+> - No upsell popups about premium or popup ads
 
 > [!CAUTION]
 > This extension **won't**:
 > - Unlock native lyrics page
 > - Let you download songs
-> - Allow to change song quality to `High`
+> - Allow to change song quality to `Very High`
 > - Allow you to listen with friends in Jams
 
 
