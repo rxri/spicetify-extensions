@@ -52,6 +52,7 @@ interface SettingsClient {
 
 interface SlotsClient {
 	clearAllAds(params: { slotId: string }): Promise<void>;
+	getSlots(): Promise<{ adSlots: { slotId: string; slot_id: string }[] }>;
 }
 
 const loadWebpack = () => {
@@ -102,6 +103,18 @@ const getSlotsClient = (functionModules: any[], transport: any): SlotsClient | n
 	}
 };
 
+const getTestingClient = (functionModules: any[], transport: any) => {
+	try {
+		const testing = functionModules.find(
+			m => m.SERVICE_ID === "spotify.ads.esperanto.testing.proto.Testing" || m.SERVICE_ID === "spotify.ads.esperanto.proto.Testing"
+		);
+		return new testing(transport);
+	} catch (error) {
+		console.error("adblockify: Failed to get testing client", error);
+		return null;
+	}
+};
+
 const map = new Map();
 
 const retryCounter = (slotId: string, action: "increment" | "clear" | "get") => {
@@ -132,7 +145,11 @@ const retryCounter = (slotId: string, action: "increment" | "clear" | "get") => 
 		return;
 	}
 	const { CosmosAsync } = Spicetify;
-	const slots = await CosmosAsync.get("sp://ads/v1/slots");
+
+	let slots = [];
+	const slotsClient = getSlotsClient(webpackCache.functionModules, productState.transport);
+	if (slotsClient) slots = (await slotsClient.getSlots()).adSlots;
+	else slots = await CosmosAsync.get("sp://ads/v1/slots");
 
 	const hideAdLikeElements = () => {
 		const css = document.createElement("style");
@@ -154,8 +171,10 @@ const retryCounter = (slotId: string, action: "increment" | "clear" | "get") => 
 	const configureAdManagers = async () => {
 		try {
 			const { billboard, leaderboard, sponsoredPlaylist }: AdManagers = AdManagers;
+			const testingClient = getTestingClient(webpackCache.functionModules, productState.transport);
 
-			await CosmosAsync.post("sp://ads/v1/testing/playtime", { value: -100000000000 });
+			if (testingClient) testingClient.addPlaytime({ seconds: -100000000000 });
+			else await CosmosAsync.post("sp://ads/v1/testing/playtime", { value: -100000000000 });
 
 			await audio.disable();
 			audio.isNewAdsNpvEnabled = false;
@@ -179,8 +198,8 @@ const retryCounter = (slotId: string, action: "increment" | "clear" | "get") => 
 
 	const bindToSlots = async () => {
 		for (const slot of slots) {
-			subToSlot(slot.slot_id);
-			setTimeout(() => handleAdSlot({ adSlotEvent: { slotId: slot.slot_id } }), 50);
+			subToSlot(slot.slotId || slot.slot_id);
+			setTimeout(() => handleAdSlot({ adSlotEvent: { slotId: slot.slotId || slot.slot_id } }), 50);
 		}
 	};
 
@@ -221,7 +240,7 @@ const retryCounter = (slotId: string, action: "increment" | "clear" | "get") => 
 
 	const intervalUpdateSlotSettings = async () => {
 		for (const slot of slots) {
-			updateSlotSettings(slot.slot_id);
+			updateSlotSettings(slot.slotId || slot.slot_id);
 		}
 	};
 
