@@ -27,6 +27,9 @@
 			tempo: "Tempo",
 			popularity: "Popularity",
 			releaseDate: "Release Date",
+			label: "Record Label",
+			genres: "Genres",
+			unknown: "Unknown"
 		},
 		fr: {
 			titletxt: "Statistique de la musique",
@@ -43,6 +46,9 @@
 			tempo: "Tempo",
 			popularity: "Popularité",
 			releaseDate: "Date de sortie",
+			label: "Label",
+			genres: "Genres",
+			unknown: "Inconnu"
 		},
 		"fr-CA": {
 			titletxt: "Statistique de la musique",
@@ -59,6 +65,9 @@
 			tempo: "Tempo",
 			popularity: "Popularité",
 			releaseDate: "Date de sortie",
+			label: "Label",
+			genres: "Genres",
+			unknown: "Inconnu"
 		},
 		cs: {
 			titletxt: "Statistiky písně",
@@ -75,6 +84,9 @@
 			tempo: "Tempo",
 			popularity: "Popularita",
 			releaseDate: "Datum vydání",
+			label: "Vydavatelství",
+			genres: "Žánry",
+			unknown: "Neznámé"
 		},
 		de: {
 			titletxt: "Songstatistiken",
@@ -91,6 +103,9 @@
 			tempo: "Tempo",
 			popularity: "Beliebtheit",
 			releaseDate: "Veröffentlichungsdatum",
+			label: "Plattenlabel",
+			genres: "Genres",
+			unknown: "Unbekannt"
 		},
 		es: {
 			titletxt: "Estadísticas de la canción",
@@ -107,6 +122,9 @@
 			tempo: "Tempo",
 			popularity: "Popularidad",
 			releaseDate: "Fecha de lanzamiento",
+			label: "Sello discográfico",
+			genres: "Géneros",
+			unknown: "Desconocido"
 		},
 	};
 
@@ -130,6 +148,9 @@
 	const tempo = translation[local_language].tempo;
 	const popularity = translation[local_language].popularity;
 	const releaseDate = translation[local_language].releaseDate;
+	const label = translation[local_language].label;
+	const genres = translation[local_language].genres;
+	const unknown = translation[local_language].unknown;
 
 	//Watch for when the song is changed
 
@@ -138,16 +159,39 @@
 		const uriFinal = uri.split(":")[2];
 		const res = await CosmosAsync.get(`https://api.spotify.com/v1/audio-features/${uriFinal}`);
 		const resTrack = await CosmosAsync.get(`https://api.spotify.com/v1/tracks/${uriFinal}`);
+		
+		// Fetch full album details to get label and potentially album genres
+		const albumId = resTrack.album.id;
+		const resAlbum = await CosmosAsync.get(`https://api.spotify.com/v1/albums/${albumId}`);
+		
+		// Fetch artist data as fallback for genres
+		const artistId = resTrack.artists[0].id;
+		const resArtist = await CosmosAsync.get(`https://api.spotify.com/v1/artists/${artistId}`);
 
 		const pitchClasses = ["C", "C♯/D♭", "D", "D♯/E♭", "E", "F", "F♯/G♭", "G", "G♯/A♭", "A", "A♯/B♭", "B"];
 
 		let keyText = res.key;
 		if (res.key === -1) {
-			keyText = "Undefined";
+			keyText = unknown;
 		} else {
 			const pitchClassIndex = res.key;
 			keyText = pitchClasses[pitchClassIndex];
 		}
+
+		// Get the label from album data
+		const labelName = resAlbum.label || unknown;
+		
+		// First try to get genres from album, then fall back to artist genres
+		let genresList = [];
+		if (resAlbum.genres && resAlbum.genres.length > 0) {
+			genresList = resAlbum.genres;
+		} else if (resArtist.genres && resArtist.genres.length > 0) {
+			genresList = resArtist.genres;
+		}
+		
+		const genresText = genresList.length > 0 ? 
+			genresList.map(genre => genre.charAt(0).toUpperCase() + genre.slice(1)).join(", ") : 
+			unknown;
 
 		Spicetify.PopupModal.display({
 			title: `${titletxt}`,
@@ -222,15 +266,23 @@
                         <div class="stats-cell">${popularity}:&nbsp;</div>
                         <div class="stats-cell">${resTrack.popularity}&nbsp;%</div>
                         </div>
-                        <div class="stats-row">
+                    <div class="stats-row">
                         <div class="stats-cell">${releaseDate}:&nbsp;</div>
                         <div class="stats-cell">${resTrack.album.release_date}</div>
+                    </div>
+                    <div class="stats-row">
+                        <div class="stats-cell">${label}:&nbsp;</div>
+                        <div class="stats-cell">${labelName}</div>
+                    </div>
+                    <div class="stats-row">
+                        <div class="stats-cell">${genres}:&nbsp;</div>
+                        <div class="stats-cell">${genresText}</div>
                     </div>
                 </div>`,
 		});
 	}
 
-	function shouldDisplayContextMenu(uris) {
+	const shouldDisplayContextMenu = (uris) => {
 		if (uris.length > 1) return false;
 		const uri = uris[0];
 		const uriObj = Spicetify.URI.fromString(uri);
@@ -238,6 +290,17 @@
 		return false;
 	}
 
-	const cntxMenu = new ContextMenu.Item(buttontxt, getSongStats, shouldDisplayContextMenu);
+	const statsIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="main-contextMenu-menuItemIcon">
+		<path d="M18 20V10"></path>
+		<path d="M12 20V4"></path>
+		<path d="M6 20v-6"></path>
+	</svg>`;
+
+	const cntxMenu = new ContextMenu.Item(
+		buttontxt,
+		getSongStats, 
+		shouldDisplayContextMenu,
+		statsIcon
+	);
 	cntxMenu.register();
 })();
