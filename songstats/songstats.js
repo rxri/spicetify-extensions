@@ -28,7 +28,8 @@
 			popularity: "Popularity",
 			releaseDate: "Release Date",
 			label: "Record Label",
-			genres: "Genres"
+			genres: "Genres",
+			unknown: "Unknown"
 		},
 		fr: {
 			titletxt: "Statistique de la musique",
@@ -46,7 +47,8 @@
 			popularity: "Popularité",
 			releaseDate: "Date de sortie",
 			label: "Label",
-			genres: "Genres"
+			genres: "Genres",
+			unknown: "Inconnu"
 		},
 		"fr-CA": {
 			titletxt: "Statistique de la musique",
@@ -64,7 +66,8 @@
 			popularity: "Popularité",
 			releaseDate: "Date de sortie",
 			label: "Label",
-			genres: "Genres"
+			genres: "Genres",
+			unknown: "Inconnu"
 		},
 		cs: {
 			titletxt: "Statistiky písně",
@@ -82,7 +85,8 @@
 			popularity: "Popularita",
 			releaseDate: "Datum vydání",
 			label: "Vydavatelství",
-			genres: "Žánry"
+			genres: "Žánry",
+			unknown: "Neznámé"
 		},
 		de: {
 			titletxt: "Songstatistiken",
@@ -100,7 +104,8 @@
 			popularity: "Beliebtheit",
 			releaseDate: "Veröffentlichungsdatum",
 			label: "Plattenlabel",
-			genres: "Genres"
+			genres: "Genres",
+			unknown: "Unbekannt"
 		},
 		es: {
 			titletxt: "Estadísticas de la canción",
@@ -118,7 +123,8 @@
 			popularity: "Popularidad",
 			releaseDate: "Fecha de lanzamiento",
 			label: "Sello discográfico",
-			genres: "Géneros"
+			genres: "Géneros",
+			unknown: "Desconocido"
 		},
 	};
 
@@ -144,6 +150,7 @@
 	const releaseDate = translation[local_language].releaseDate;
 	const label = translation[local_language].label;
 	const genres = translation[local_language].genres;
+	const unknown = translation[local_language].unknown;
 
 	//Watch for when the song is changed
 
@@ -153,32 +160,38 @@
 		const res = await CosmosAsync.get(`https://api.spotify.com/v1/audio-features/${uriFinal}`);
 		const resTrack = await CosmosAsync.get(`https://api.spotify.com/v1/tracks/${uriFinal}`);
 		
-		// Fetch artist data to get genres
-		const artistId = resTrack.artists[0].id;
-		const resArtist = await CosmosAsync.get(`https://api.spotify.com/v1/artists/${artistId}`);
-		
-		// Fetch full album details to get label
+		// Fetch full album details to get label and potentially album genres
 		const albumId = resTrack.album.id;
 		const resAlbum = await CosmosAsync.get(`https://api.spotify.com/v1/albums/${albumId}`);
+		
+		// Fetch artist data as fallback for genres
+		const artistId = resTrack.artists[0].id;
+		const resArtist = await CosmosAsync.get(`https://api.spotify.com/v1/artists/${artistId}`);
 
 		const pitchClasses = ["C", "C♯/D♭", "D", "D♯/E♭", "E", "F", "F♯/G♭", "G", "G♯/A♭", "A", "A♯/B♭", "B"];
 
 		let keyText = res.key;
 		if (res.key === -1) {
-			keyText = "Undefined";
+			keyText = unknown;
 		} else {
 			const pitchClassIndex = res.key;
 			keyText = pitchClasses[pitchClassIndex];
 		}
 
 		// Get the label from album data
-		const labelName = resAlbum.label || "Unknown";
+		const labelName = resAlbum.label || unknown;
 		
-		// Get genres from artist data
-		const genresList = resArtist.genres || [];
+		// First try to get genres from album, then fall back to artist genres
+		let genresList = [];
+		if (resAlbum.genres && resAlbum.genres.length > 0) {
+			genresList = resAlbum.genres;
+		} else if (resArtist.genres && resArtist.genres.length > 0) {
+			genresList = resArtist.genres;
+		}
+		
 		const genresText = genresList.length > 0 ? 
 			genresList.map(genre => genre.charAt(0).toUpperCase() + genre.slice(1)).join(", ") : 
-			"Unknown";
+			unknown;
 
 		Spicetify.PopupModal.display({
 			title: `${titletxt}`,
