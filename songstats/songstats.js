@@ -27,6 +27,8 @@
 			tempo: "Tempo",
 			popularity: "Popularity",
 			releaseDate: "Release Date",
+			label: "Record Label",
+			genres: "Genres"
 		},
 		fr: {
 			titletxt: "Statistique de la musique",
@@ -43,6 +45,8 @@
 			tempo: "Tempo",
 			popularity: "Popularité",
 			releaseDate: "Date de sortie",
+			label: "Label",
+			genres: "Genres"
 		},
 		"fr-CA": {
 			titletxt: "Statistique de la musique",
@@ -59,6 +63,8 @@
 			tempo: "Tempo",
 			popularity: "Popularité",
 			releaseDate: "Date de sortie",
+			label: "Label",
+			genres: "Genres"
 		},
 		cs: {
 			titletxt: "Statistiky písně",
@@ -75,6 +81,8 @@
 			tempo: "Tempo",
 			popularity: "Popularita",
 			releaseDate: "Datum vydání",
+			label: "Vydavatelství",
+			genres: "Žánry"
 		},
 		de: {
 			titletxt: "Songstatistiken",
@@ -91,6 +99,8 @@
 			tempo: "Tempo",
 			popularity: "Beliebtheit",
 			releaseDate: "Veröffentlichungsdatum",
+			label: "Plattenlabel",
+			genres: "Genres"
 		},
 		es: {
 			titletxt: "Estadísticas de la canción",
@@ -107,6 +117,8 @@
 			tempo: "Tempo",
 			popularity: "Popularidad",
 			releaseDate: "Fecha de lanzamiento",
+			label: "Sello discográfico",
+			genres: "Géneros"
 		},
 	};
 
@@ -130,6 +142,8 @@
 	const tempo = translation[local_language].tempo;
 	const popularity = translation[local_language].popularity;
 	const releaseDate = translation[local_language].releaseDate;
+	const label = translation[local_language].label;
+	const genres = translation[local_language].genres;
 
 	//Watch for when the song is changed
 
@@ -138,6 +152,14 @@
 		const uriFinal = uri.split(":")[2];
 		const res = await CosmosAsync.get(`https://api.spotify.com/v1/audio-features/${uriFinal}`);
 		const resTrack = await CosmosAsync.get(`https://api.spotify.com/v1/tracks/${uriFinal}`);
+		
+		// Fetch artist data to get genres
+		const artistId = resTrack.artists[0].id;
+		const resArtist = await CosmosAsync.get(`https://api.spotify.com/v1/artists/${artistId}`);
+		
+		// Fetch full album details to get label
+		const albumId = resTrack.album.id;
+		const resAlbum = await CosmosAsync.get(`https://api.spotify.com/v1/albums/${albumId}`);
 
 		const pitchClasses = ["C", "C♯/D♭", "D", "D♯/E♭", "E", "F", "F♯/G♭", "G", "G♯/A♭", "A", "A♯/B♭", "B"];
 
@@ -148,6 +170,15 @@
 			const pitchClassIndex = res.key;
 			keyText = pitchClasses[pitchClassIndex];
 		}
+
+		// Get the label from album data
+		const labelName = resAlbum.label || "Unknown";
+		
+		// Get genres from artist data
+		const genresList = resArtist.genres || [];
+		const genresText = genresList.length > 0 ? 
+			genresList.map(genre => genre.charAt(0).toUpperCase() + genre.slice(1)).join(", ") : 
+			"Unknown";
 
 		Spicetify.PopupModal.display({
 			title: `${titletxt}`,
@@ -222,15 +253,23 @@
                         <div class="stats-cell">${popularity}:&nbsp;</div>
                         <div class="stats-cell">${resTrack.popularity}&nbsp;%</div>
                         </div>
-                        <div class="stats-row">
+                    <div class="stats-row">
                         <div class="stats-cell">${releaseDate}:&nbsp;</div>
                         <div class="stats-cell">${resTrack.album.release_date}</div>
+                    </div>
+                    <div class="stats-row">
+                        <div class="stats-cell">${label}:&nbsp;</div>
+                        <div class="stats-cell">${labelName}</div>
+                    </div>
+                    <div class="stats-row">
+                        <div class="stats-cell">${genres}:&nbsp;</div>
+                        <div class="stats-cell">${genresText}</div>
                     </div>
                 </div>`,
 		});
 	}
 
-	function shouldDisplayContextMenu(uris) {
+	const shouldDisplayContextMenu = (uris) => {
 		if (uris.length > 1) return false;
 		const uri = uris[0];
 		const uriObj = Spicetify.URI.fromString(uri);
@@ -238,6 +277,17 @@
 		return false;
 	}
 
-	const cntxMenu = new ContextMenu.Item(buttontxt, getSongStats, shouldDisplayContextMenu);
+	const statsIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="main-contextMenu-menuItemIcon">
+		<path d="M18 20V10"></path>
+		<path d="M12 20V4"></path>
+		<path d="M6 20v-6"></path>
+	</svg>`;
+
+	const cntxMenu = new ContextMenu.Item(
+		buttontxt,
+		getSongStats, 
+		shouldDisplayContextMenu,
+		statsIcon
+	);
 	cntxMenu.register();
 })();
