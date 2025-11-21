@@ -23,6 +23,15 @@ body:
       render: Markdown
     validations:
       required: true
+  - type: dropdown
+    id: install_type
+    attributes:
+      label: How did you install an extension?
+      options:
+        - Marketplace
+        - Local installation (by installing in `%appdata\spicetify\Extensions` or `~/.config/spicetify`)
+    validations:
+      required: true
   - type: input
     id: extension
     attributes:
