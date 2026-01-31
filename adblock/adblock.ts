@@ -43,11 +43,13 @@ interface Window {
 	webpackChunkclient_web: any;
 }
 
+declare const Spicetify: any;
+
 interface SettingsClient {
 	updateAdServerEndpoint(params: { slotIds: string[]; url: string }): Promise<void>;
-	updateDisplayTimeInterval(params: { slotId: string; timeInterval: string }): Promise<void>;
+	updateDisplayTimeInterval(params: { slotId: string; timeInterval: string | bigint }): Promise<void>;
 	updateSlotEnabled(params: { slotId: string; enabled: boolean }): Promise<void>;
-	updateStreamTimeInterval(params: { slotId: string; timeInterval: string }): Promise<void>;
+	updateStreamTimeInterval(params: { slotId: string; timeInterval: string | bigint }): Promise<void>;
 }
 
 interface SlotsClient {
@@ -64,7 +66,7 @@ const loadWebpack = () => {
 			.flatMap(module => {
 				try {
 					return Object.values(module);
-				} catch {}
+				} catch { }
 			});
 		const functionModules = modules.filter(module => typeof module === "function");
 
@@ -125,9 +127,7 @@ const retryCounter = (slotId: string, action: "increment" | "clear" | "get") => 
 };
 
 (async function adblockify() {
-	// @ts-expect-error: Events are not defined in types
 	await new Promise(res => Spicetify.Events.platformLoaded.on(res));
-	// @ts-expect-error: Events are not defined in types
 	await new Promise(res => Spicetify.Events.webpackLoaded.on(res));
 	const webpackCache = loadWebpack();
 
@@ -179,7 +179,10 @@ const retryCounter = (slotId: string, action: "increment" | "clear" | "get") => 
 			await audio.disable();
 			audio.isNewAdsNpvEnabled = false;
 			await billboard.disable();
-			await leaderboard.disableLeaderboard();
+			// Safely check for leaderboard manager existence
+			if (leaderboard && typeof leaderboard.disableLeaderboard === 'function') {
+				await leaderboard.disableLeaderboard();
+			}
 			await sponsoredPlaylist.disable();
 			if (AdManagers?.inStreamApi) {
 				const { inStreamApi }: AdManagers = AdManagers;
@@ -230,9 +233,9 @@ const retryCounter = (slotId: string, action: "increment" | "clear" | "get") => 
 			const settingsClient = getSettingsClient(webpackCache.cache, webpackCache.functionModules, productState.transport);
 			if (!settingsClient) return;
 			await settingsClient.updateAdServerEndpoint({ slotIds: [slotId], url: "http://localhost/no/thanks" });
-			await settingsClient.updateStreamTimeInterval({ slotId, timeInterval: "0" });
+			await settingsClient.updateStreamTimeInterval({ slotId, timeInterval: 0n });
 			await settingsClient.updateSlotEnabled({ slotId, enabled: false });
-			await settingsClient.updateDisplayTimeInterval({ slotId, timeInterval: "0" });
+			await settingsClient.updateDisplayTimeInterval({ slotId, timeInterval: 0n });
 		} catch (error: unknown) {
 			console.error("adblockify: Failed inside `updateSlotSettings` function\n", error);
 		}
@@ -292,11 +295,8 @@ const retryCounter = (slotId: string, action: "increment" | "clear" | "get") => 
 				enablePremiumUserForMiniPlayer: true,
 			};
 
-			// @ts-expect-error: RemoteConfigResolver is not defined in types
 			if (Spicetify?.RemoteConfigResolver) {
-				// @ts-expect-error: createInternalMap is not defined in types
 				const map = Spicetify.createInternalMap(overrides);
-				// @ts-expect-error: RemoteConfigResolver is not defined in types
 				Spicetify.RemoteConfigResolver.value.setOverrides(map);
 			} else if (Spicetify.Platform?.RemoteConfigDebugAPI) {
 				const RemoteConfigDebugAPI = Spicetify.Platform.RemoteConfigDebugAPI;
