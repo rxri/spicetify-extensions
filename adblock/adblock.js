@@ -1,7 +1,5 @@
-"use strict";
 /**
  * @author ririxi
- * Patched to fix uint64 error
  */
 const loadWebpack = () => {
     try {
@@ -10,11 +8,11 @@ const loadWebpack = () => {
         const modules = cache
             .filter(module => typeof module === "object")
             .flatMap(module => {
-                try {
-                    return Object.values(module);
-                }
-                catch { }
-            });
+            try {
+                return Object.values(module);
+            }
+            catch { }
+        });
         const functionModules = modules.filter(module => typeof module === "function");
         return { cache, functionModules };
     }
@@ -69,9 +67,7 @@ const retryCounter = (slotId, action) => {
         return map.get(slotId)?.count;
 };
 (async function adblockify() {
-    // @ts-expect-error: Events are not defined in types
     await new Promise(res => Spicetify.Events.platformLoaded.on(res));
-    // @ts-expect-error: Events are not defined in types
     await new Promise(res => Spicetify.Events.webpackLoaded.on(res));
     const webpackCache = loadWebpack();
     const { Platform, Locale } = Spicetify;
@@ -120,12 +116,10 @@ const retryCounter = (slotId, action) => {
             await audio.disable();
             audio.isNewAdsNpvEnabled = false;
             await billboard.disable();
-
             // Safely check for leaderboard manager existence
             if (leaderboard && typeof leaderboard.disableLeaderboard === 'function') {
                 await leaderboard.disableLeaderboard();
             }
-
             await sponsoredPlaylist.disable();
             if (AdManagers?.inStreamApi) {
                 const { inStreamApi } = AdManagers;
@@ -177,10 +171,8 @@ const retryCounter = (slotId, action) => {
             if (!settingsClient)
                 return;
             await settingsClient.updateAdServerEndpoint({ slotIds: [slotId], url: "http://localhost/no/thanks" });
-            // FIXED: Changed "0" to 0n to avoid uint64 overflow error
             await settingsClient.updateStreamTimeInterval({ slotId, timeInterval: 0n });
             await settingsClient.updateSlotEnabled({ slotId, enabled: false });
-            // FIXED: Changed "0" to 0n to avoid uint64 overflow error
             await settingsClient.updateDisplayTimeInterval({ slotId, timeInterval: 0n });
         }
         catch (error) {
@@ -244,11 +236,8 @@ const retryCounter = (slotId, action) => {
                 hideUpgradeCTA: true,
                 enablePremiumUserForMiniPlayer: true,
             };
-            // @ts-expect-error: RemoteConfigResolver is not defined in types
             if (Spicetify?.RemoteConfigResolver) {
-                // @ts-expect-error: createInternalMap is not defined in types
                 const map = Spicetify.createInternalMap(overrides);
-                // @ts-expect-error: RemoteConfigResolver is not defined in types
                 Spicetify.RemoteConfigResolver.value.setOverrides(map);
             }
             else if (Spicetify.Platform?.RemoteConfigDebugAPI) {
