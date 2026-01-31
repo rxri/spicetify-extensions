@@ -5,15 +5,18 @@
 	"scripts": {
 		"build": "tsc"
 	},
-	"packageManager": "pnpm@9.1.3",
+	"packageManager": "pnpm@10.27.0",
 	"engines": {
 		"node": ">=18",
 		"npm": "please-use-pnpm",
-		"pnpm": ">=9",
+		"pnpm": ">=10",
 		"yarn": "please-use-pnpm"
 	},
 	"devDependencies": {
 		"@types/react": "^18.3.3",
-		"typescript": "^5.4.5"
+		"typescript": "^5.9.3"
+	},
+	"dependencies": {
+		"esbuild": "^0.27.2"
 	}
 }

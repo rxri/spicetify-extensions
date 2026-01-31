@@ -45,9 +45,9 @@ interface Window {
 
 interface SettingsClient {
 	updateAdServerEndpoint(params: { slotIds: string[]; url: string }): Promise<void>;
-	updateDisplayTimeInterval(params: { slotId: string; timeInterval: string }): Promise<void>;
+	updateDisplayTimeInterval(params: { slotId: string; timeInterval: bigint | string }): Promise<void>;
 	updateSlotEnabled(params: { slotId: string; enabled: boolean }): Promise<void>;
-	updateStreamTimeInterval(params: { slotId: string; timeInterval: string }): Promise<void>;
+	updateStreamTimeInterval(params: { slotId: string; timeInterval: bigint | string }): Promise<void>;
 }
 
 interface SlotsClient {
@@ -140,6 +140,7 @@ const retryCounter = (slotId: string, action: "increment" | "clear" | "get") => 
 	const { audio }: AdManagers = AdManagers;
 	const { UserAPI } = Platform;
 	const productState: ProductStateAPI = UserAPI._product_state || UserAPI._product_state_service || Platform?.ProductStateAPI?.productStateApi;
+	const version = Spicetify.Platform.version.split(".").map((i: string) => Number.parseInt(i));
 	if (!Spicetify?.CosmosAsync) {
 		setTimeout(adblockify, 100);
 		return;
@@ -179,7 +180,7 @@ const retryCounter = (slotId: string, action: "increment" | "clear" | "get") => 
 			await audio.disable();
 			audio.isNewAdsNpvEnabled = false;
 			await billboard.disable();
-			await leaderboard.disableLeaderboard();
+			await leaderboard?.disableLeaderboard();
 			await sponsoredPlaylist.disable();
 			if (AdManagers?.inStreamApi) {
 				const { inStreamApi }: AdManagers = AdManagers;
@@ -229,10 +230,11 @@ const retryCounter = (slotId: string, action: "increment" | "clear" | "get") => 
 		try {
 			const settingsClient = getSettingsClient(webpackCache.cache, webpackCache.functionModules, productState.transport);
 			if (!settingsClient) return;
+			const timeInterval = version[0] === 1 && version[1] >= 2 && version[2] >= 82 ? 0n : "0";
 			await settingsClient.updateAdServerEndpoint({ slotIds: [slotId], url: "http://localhost/no/thanks" });
-			await settingsClient.updateStreamTimeInterval({ slotId, timeInterval: "0" });
+			await settingsClient.updateStreamTimeInterval({ slotId, timeInterval });
 			await settingsClient.updateSlotEnabled({ slotId, enabled: false });
-			await settingsClient.updateDisplayTimeInterval({ slotId, timeInterval: "0" });
+			await settingsClient.updateDisplayTimeInterval({ slotId, timeInterval });
 		} catch (error: unknown) {
 			console.error("adblockify: Failed inside `updateSlotSettings` function\n", error);
 		}
