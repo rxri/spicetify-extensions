@@ -150,7 +150,14 @@ const retryCounter = (slotId: string, action: "increment" | "clear" | "get") => 
 	let slots = [];
 	const slotsClient = getSlotsClient(webpackCache.functionModules, productState.transport);
 	if (slotsClient) slots = (await slotsClient.getSlots()).adSlots;
-	else slots = await CosmosAsync.get("sp://ads/v1/slots");
+	else {
+		try {
+			slots = await CosmosAsync.get("sp://ads/v1/slots");
+		} catch (error: unknown) {
+			setTimeout(adblockify, 100);
+			return;
+		}
+	}
 
 	const hideAdLikeElements = () => {
 		const css = document.createElement("style");
