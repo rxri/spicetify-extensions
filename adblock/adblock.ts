@@ -66,7 +66,14 @@ const loadWebpack = () => {
 					return Object.values(module);
 				} catch {}
 			});
-		const functionModules = modules.filter(module => typeof module === "function");
+		const webpackFactories = new Set(Object.values(require.m));
+		const functionModules = modules.flatMap(module =>
+			typeof module === "function"
+				? [module]
+				: typeof module === "object" && module
+					? Object.values(module).filter(v => typeof v === "function" && !webpackFactories.has(v))
+					: [],
+		);
 
 		return { cache, functionModules };
 	} catch (error) {
@@ -80,7 +87,7 @@ const getSettingsClient = (cache: any[], functionModules: any[] = [], transport:
 		const settingsClient = cache.find((m: any) => m?.settingsClient)?.settingsClient;
 		if (!settingsClient) {
 			const settings = functionModules.find(
-				m => m?.SERVICE_ID === "spotify.ads.esperanto.settings.proto.Settings" || m?.SERVICE_ID === "spotify.ads.esperanto.proto.Settings"
+				m => m?.SERVICE_ID === "spotify.ads.esperanto.settings.proto.Settings" || m?.SERVICE_ID === "spotify.ads.esperanto.proto.Settings",
 			);
 			return new settings(transport);
 		}
@@ -94,7 +101,7 @@ const getSettingsClient = (cache: any[], functionModules: any[] = [], transport:
 const getSlotsClient = (functionModules: any[], transport: any): SlotsClient | null => {
 	try {
 		const slots = functionModules.find(
-			m => m.SERVICE_ID === "spotify.ads.esperanto.slots.proto.Slots" || m.SERVICE_ID === "spotify.ads.esperanto.proto.Slots"
+			m => m.SERVICE_ID === "spotify.ads.esperanto.slots.proto.Slots" || m.SERVICE_ID === "spotify.ads.esperanto.proto.Slots",
 		);
 		return new slots(transport);
 	} catch (error) {
@@ -106,7 +113,7 @@ const getSlotsClient = (functionModules: any[], transport: any): SlotsClient | n
 const getTestingClient = (functionModules: any[], transport: any) => {
 	try {
 		const testing = functionModules.find(
-			m => m.SERVICE_ID === "spotify.ads.esperanto.testing.proto.Testing" || m.SERVICE_ID === "spotify.ads.esperanto.proto.Testing"
+			m => m.SERVICE_ID === "spotify.ads.esperanto.testing.proto.Testing" || m.SERVICE_ID === "spotify.ads.esperanto.proto.Testing",
 		);
 		return new testing(transport);
 	} catch (error) {
