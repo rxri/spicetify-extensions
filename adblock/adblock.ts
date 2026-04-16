@@ -235,7 +235,7 @@ const retryCounter = (slotId: string, action: "increment" | "clear" | "get") => 
 				retryCounter(slotId, "clear");
 				return;
 			}
-			setTimeout(handleAdSlot, 1 * 1000, data);
+			setTimeout(handleAdSlot, 1000, data);
 		}
 		configureAdManagers();
 	};
