@@ -41,6 +41,7 @@ interface AdManagers {
 
 interface Window {
 	webpackChunkclient_web: any;
+	rspackChunkclient_web: any;
 }
 
 interface SettingsClient {
@@ -55,9 +56,23 @@ interface SlotsClient {
 	getSlots(): Promise<{ adSlots: { slotId: string; slot_id: string }[] }>;
 }
 
-const loadWebpack = () => {
+const waitFor = async <T>(callback: () => T | undefined, interval = 50, retries = 20): Promise<T | undefined> => {
+	for (let i = 0; i < retries; i++) {
+		const result = callback();
+		if (result !== undefined) return result;
+		await new Promise(resolve => setTimeout(resolve, interval));
+	}
+
+	return callback();
+};
+
+const getChunkQueue = () => window?.webpackChunkclient_web || window?.rspackChunkclient_web;
+
+const loadWebpack = async () => {
 	try {
-		const require = window.webpackChunkclient_web.push([[Symbol()], {}, (re: any) => re]);
+		const chunkQueue = await waitFor(getChunkQueue, 50);
+		if (!chunkQueue) throw new Error("Could not find webpack/rspack chunk queue");
+		const require = chunkQueue.push([[Symbol()], {}, (re: any) => re]);
 		const cache = Object.keys(require.m).map(id => require(id));
 		const modules = cache
 			.filter(module => typeof module === "object")
@@ -136,7 +151,7 @@ const retryCounter = (slotId: string, action: "increment" | "clear" | "get") => 
 	await new Promise(res => Spicetify.Events.platformLoaded.on(res));
 	// @ts-expect-error: Events are not defined in types
 	await new Promise(res => Spicetify.Events.webpackLoaded.on(res));
-	const webpackCache = loadWebpack();
+	const webpackCache = await loadWebpack();
 
 	const { Platform, Locale } = Spicetify;
 	const { AdManagers } = Platform;
