@@ -308,18 +308,28 @@ const retryCounter = (slotId: string, action: "increment" | "clear" | "get") => 
 				enablePremiumUserForMiniPlayer: true,
 			};
 
-			// @ts-expect-error: RemoteConfigResolver is not defined in types
-			if (Spicetify?.RemoteConfigResolver) {
-				// @ts-expect-error: createInternalMap is not defined in types
-				const map = Spicetify.createInternalMap(overrides);
-				// @ts-expect-error: RemoteConfigResolver is not defined in types
-				Spicetify.RemoteConfigResolver.value.setOverrides(map);
-			} else if (Spicetify.Platform?.RemoteConfigDebugAPI) {
+			if (Spicetify.Platform?.RemoteConfigDebugAPI?.getProperties && Spicetify.Platform.RemoteConfigDebugAPI?.setOverride) {
+				const RemoteConfigDebugAPI = Spicetify.Platform.RemoteConfigDebugAPI;
+				const properties: { source?: string; type?: string; name?: string; localValue?: boolean }[] =
+					await RemoteConfigDebugAPI.getProperties();
+
+				for (const [key, value] of Object.entries(overrides)) {
+					const ref = properties.find(property => property?.source === "web" && property?.type === "boolean" && property?.name === key);
+					if (!ref) continue;
+					await RemoteConfigDebugAPI.setOverride({ ref, value }, { autoRunOverrideEffects: ref.localValue !== value });
+				}
+			} else if (Spicetify.Platform?.RemoteConfigDebugAPI?.setOverride) {
 				const RemoteConfigDebugAPI = Spicetify.Platform.RemoteConfigDebugAPI;
 
 				for (const [key, value] of Object.entries(overrides)) {
 					await RemoteConfigDebugAPI.setOverride({ source: "web", type: "boolean", name: key }, value);
 				}
+				// @ts-expect-error: RemoteConfigResolver is not defined in types
+			} else if (Spicetify?.RemoteConfigResolver && typeof Spicetify.createInternalMap === "function") {
+				// @ts-expect-error: createInternalMap is not defined in types
+				const map = Spicetify.createInternalMap(overrides);
+				// @ts-expect-error: RemoteConfigResolver is not defined in types
+				Spicetify.RemoteConfigResolver.value.setOverrides(map);
 			}
 		} catch (error: unknown) {
 			console.error("adblockify: Failed inside `enableExperimentalFeatures` function\n", error);

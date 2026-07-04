@@ -1,22 +1,22 @@
 {
-	"name": "spicetify-extensions",
-	"author": "ririxi <dev@ririxi.dev>",
-	"license": "MIT",
-	"scripts": {
-		"build": "tsc"
-	},
-	"packageManager": "pnpm@10.27.0",
-	"engines": {
-		"node": ">=18",
-		"npm": "please-use-pnpm",
-		"pnpm": ">=10",
-		"yarn": "please-use-pnpm"
-	},
-	"devDependencies": {
-		"@types/react": "^18.3.3",
-		"typescript": "^5.9.3"
-	},
-	"dependencies": {
-		"esbuild": "^0.27.2"
-	}
+  "name": "spicetify-extensions",
+  "license": "MIT",
+  "author": "ririxi <dev@ririxi.dev>",
+  "scripts": {
+    "build": "tsgo"
+  },
+  "dependencies": {
+    "esbuild": "^0.28.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.3",
+    "@typescript/native-preview": "7.0.0-dev.20260703.1"
+  },
+  "engines": {
+    "node": ">=18",
+    "npm": "please-use-pnpm",
+    "pnpm": ">=10",
+    "yarn": "please-use-pnpm"
+  },
+  "packageManager": "pnpm@11.9.0"
 }
