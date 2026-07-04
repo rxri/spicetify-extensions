@@ -19,7 +19,7 @@ Stream Spotify music without interruptions - Block ads instantly, with ease.
 
 ## Install
 
-1. Copy `adblock.js` to extensions folder based on your OS or install it via **[marketplace](https://github.com/spicetify/spicetify-marketplace)**
+1. Copy [`adblock.js`](adblock/assets/adblock.js) to extensions folder based on your OS or install it via **[marketplace](https://github.com/spicetify/spicetify-marketplace)**
 
 | **Platform**   | **Path**                                                                             |
 |----------------|--------------------------------------------------------------------------------------|
