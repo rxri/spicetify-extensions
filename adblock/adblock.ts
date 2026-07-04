@@ -41,6 +41,7 @@ interface AdManagers {
 
 interface Window {
 	webpackChunkclient_web: any;
+	rspackChunkclient_web: any;
 }
 
 interface SettingsClient {
@@ -57,7 +58,9 @@ interface SlotsClient {
 
 const loadWebpack = () => {
 	try {
-		const require = window.webpackChunkclient_web.push([[Symbol()], {}, (re: any) => re]);
+		// Spotify 1.2.93+ builds with rspack, which renames the chunk global.
+		const chunkGlobal = window.rspackChunkclient_web || window.webpackChunkclient_web;
+		const require = chunkGlobal.push([[Symbol()], {}, (re: any) => re]);
 		const cache = Object.keys(require.m).map(id => require(id));
 		const modules = cache
 			.filter(module => typeof module === "object")
