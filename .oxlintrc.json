@@ -1,0 +1,28 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["eslint", "typescript", "unicorn", "oxc", "react", "react-perf", "promise"],
+  "rules": {
+    "no-await-in-loop": "error",
+    "no-param-reassign": "error",
+    "default-param-last": "error",
+    "typescript/prefer-enum-initializers": "error",
+    "typescript/no-inferrable-types": "error",
+    "unicorn/prefer-array-find": "error",
+    "unicorn/prefer-array-flat-map": "error",
+    "unicorn/prefer-number-properties": "error",
+    "unicorn/prefer-set-has": "error",
+    "no-else-return": "error",
+    "react/self-closing-comp": "error",
+    "sort-imports": [
+      "error",
+      {
+        "memberSyntaxSortOrder": ["none", "all", "multiple", "single"],
+        "ignoreDeclarationSort": true
+      }
+    ]
+  },
+  "options": {
+    "typeAware": true
+  },
+  "ignorePatterns": ["*.gen.ts", "packages/proto/src/gen/**/*", "**/dist/**", "**/dist-ssr/**", "apps/client/src/components/auth/**/*"]
+}

@@ -1,0 +1,13 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "printWidth": 150,
+  "useTabs": false,
+  "tabWidth": 2,
+  "trailingComma": "all",
+  "arrowParens": "always",
+  "ignorePatterns": ["*.gen.ts", "packages/proto/src/gen/**/*"],
+  "sortImports": {
+    "newlinesBetwenen": true,
+    "groups": ["type-import", ["builtin", "external"], "internal", ["parent", "sibling", "index"], "unknown"]
+  }
+}
