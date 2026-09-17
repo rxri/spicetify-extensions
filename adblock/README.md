@@ -12,7 +12,6 @@ Stream Spotify music without interruptions - Block ads instantly, with ease.
 
 > [!CAUTION]
 > This extension **won't**:
-> - Unlock native lyrics page
 > - Let you download songs
 > - Allow to change song quality to `Very High`
 > - Allow you to listen with friends in Jams
